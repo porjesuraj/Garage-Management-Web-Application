@@ -1,5 +1,5 @@
 ---
-# UML CASE DIAGRAM FOR GARAGE MANAGEMENT PROJECT 
+## UML CASE DIAGRAM FOR GARAGE MANAGEMENT PROJECT 
 ---
 
 ---
@@ -9,7 +9,7 @@ Employee: He actually handles service of customers.
 Admin:   He has an authority to ADD and DELETE Vendors.
 ---
 
-##Customer role:   
+## Customer role:   
    
     1. 	Login
     2. 	Register
@@ -34,7 +34,7 @@ Customer-->(Feedback)
 
 
 
-##Vendor role:
+## Vendor role:
 
 	1. Login
 	2. New customer registration
@@ -76,7 +76,7 @@ vendor-->(Create Check-list/JobCard)
 vendor-->( Feedback)
 ```
 
-##Employee role:
+## Employee role:
 
          1. Register
          2.Login 
@@ -97,7 +97,7 @@ Employee-->(Request to Generate Estimated Bill)
 Employee-->(Feedback)
 ```
 
-##Admin role:
+## Admin role:
 
             1.Login
          	2.Vendor Management

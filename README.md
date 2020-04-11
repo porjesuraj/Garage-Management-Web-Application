@@ -1,8 +1,12 @@
 ---
-Customer: Clinent, who gets service by vendor.
-Vendor:      Service center owner.
+## UML CASE DIAGRAM FOR GARAGE MANAGEMENT PROJECT 
+---
+
+---
+Customer: Client, who gets service by vendor.
+Vendor:   Service center owner.
 Employee: He actually handles service of customers.
-Admin:       He has an authority to ADD and DELETE Vendors.
+Admin:   He has an authority to ADD and DELETE Vendors.
 ---
 
 ##Customer role:   

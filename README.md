@@ -1,6 +1,5 @@
----
+
 ## UML CASE DIAGRAM FOR GARAGE MANAGEMENT PROJECT 
----
 
 ---
 Customer: Client, who gets service by vendor.

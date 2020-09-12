@@ -1,5 +1,22 @@
+## CDAC Project
 
-### Basic Panels/Front: 
+---
+## Garage Management System Project
+---
+
+###  Scope Of Project 
+
+* Currently vehicle servicing management has become a tedious job. 
+* Small and medium scale garage, service centers have to manage data about customers, services offered to them. 
+* It is difficult for small scale businesses to maintain data for longer time as they are using paper based system. 
+* Customers also need to find nearest garage which provide authentic service. 
+* Using this system they will be able to maintain customer and services data. 
+* Also multiple services centers which are using the same system will be able to synchronize their work. 
+* We are also solving the problem from customer's end by making ease of choice.They can choose the service center nearby their location.
+
+---
+
+### Application Panel/Front :- 
 
 1. **ADMIN**
 
@@ -22,7 +39,6 @@
       - delete an offer 
       
 
-<hr>
 
 2. **VENDOR**
 
@@ -55,7 +71,7 @@
      - list feedback
      - delete feedback   
 
-<hr>
+---
 
 3. **EMPLOYEES**
 
@@ -69,7 +85,7 @@
  * Feedback
      - get feedback        
  
-<hr>
+---
 
 4. **CUSTOMER**
 
@@ -84,7 +100,7 @@
      - add feedback
      - delete feedback that has already been posted
 
-<hr>
+---
 
 
 ## UML CASE DIAGRAM FOR GARAGE MANAGEMENT PROJECT 
@@ -96,7 +112,7 @@
 - Admin:   He has an authority to ADD and DELETE Vendors.
 ---
 
-## Customer role:   
+### Customer role:   
    
 1. 	Login
 2. 	Register
@@ -117,11 +133,11 @@ Customer-->(Inform Servicing Task)
 Customer-->(View Invoice Details)
 Customer-->(Pay Bill)
 Customer-->(Feedback)
+
 ```
 
 
-
-## Vendor role:
+### Vendor role:
 
 1.  Login
 2.  New customer registration
@@ -163,7 +179,7 @@ vendor-->(Create Check-list/JobCard)
 vendor-->( Feedback)
 ```
 
-## Employee role:
+### Employee role:
 
 1. Register
 2. Login 
@@ -184,7 +200,7 @@ Employee-->(Request to Generate Estimated Bill)
 Employee-->(Feedback)
 ```
 
-## Admin role:
+### Admin role:
 
 1. Login
 2. Vendor Management
@@ -206,16 +222,13 @@ Admin-->( Vendor Report per vendor)
 Admin-->( Overall  Report Generation)
 ```
 
-<hr>
+---
 
+## E-R Diagram
 
-
-
-### E-R Diagram
-
-<hr>
+---
 <img src="E-R_diagram.png">
 
-<hr>
+---
 
 

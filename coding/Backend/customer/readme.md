@@ -11,7 +11,7 @@ customer panel
   - mysql2 		<- mysql connectivity
   - crypto-js		<- for encryption
   - jsonwebtoken	<- jwt auth token
-
+  - uuid         <-- universal identifier
   - morgan		<- server logging
   - nodemailer		<- for sending email
 
@@ -40,6 +40,6 @@ customer panel
         "lastName" : "porje",
         "birthDate" : 1994-01-01,
         "contact" : 9881233422,
-        "email" : "surajporje@gmial.com",
+        "email" : "testprojectdac@gmail.com",
         "address" : "nasik",
-        "password" : "password"
+        "password" : "IndiaIsBest"

@@ -8,6 +8,7 @@ const app = express()
 //middleware
 app.use(morgan('combined'))
 app.use(bodyParser.json())
+app.use(express.static('images/'))
 //routes
 app.use('/customer',customerRouter)
 

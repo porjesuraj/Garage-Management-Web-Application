@@ -23,8 +23,8 @@ customer panel
 
   customer panel 
 
-  1. Signup
-  2. Signin
+  1. Signup : done
+  2. Signin : done 
   3. Service Management
      - get service history
      - get current serivce details

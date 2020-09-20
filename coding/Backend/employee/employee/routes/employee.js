@@ -145,7 +145,7 @@ router.post('/signup', (request, response) => {
  *       200:
  *         description: successfull singin
  */
-/*
+
 router.post('/signin', (request, response) => {
 
     const { email, password } = request.body
@@ -180,7 +180,7 @@ router.post('/signin', (request, response) => {
     })
 
 })
-*/
+
 
 // ------------------------------
 //              PUT              

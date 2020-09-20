@@ -1,0 +1,33 @@
+function createResult(error, data) {
+    return error ? createError(error) : createSuccess(data)
+}
+
+function createSuccess(data) {
+    const result = {}
+
+    result['status'] = 'success'
+    result['data'] = data
+    return result
+}
+
+function createError(error) {
+    const result = {}
+
+    result['status'] = 'error'
+    result['error'] = error
+    return result
+}
+
+function generateOTP() {
+    const min = 1000
+    const max = 9999
+
+    return Math.floor(Math.round() * (max - min) + min)
+}
+
+module.exports = {
+    createResult: createResult,
+    createSuccess: createSuccess,
+    createError: createError,
+    generateOTP: generateOTP
+}

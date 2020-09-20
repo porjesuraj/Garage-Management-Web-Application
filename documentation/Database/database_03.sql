@@ -59,7 +59,7 @@ create table employee (
 	vendor_id INTEGER NOT NULL,
 	firstName VARCHAR(45) NOT NULL,
 	lastName VARCHAR(45) NOT NULL,
-	birthDate DATE DEFAULT CURRENT_DATE, 
+	birthDate DATE , 
 	email VARCHAR(45) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -76,7 +76,7 @@ create table customer (
 	firstName VARCHAR(45) NOT NULL,
 	middleName VARCHAR(45) NOT NULL,
 	lastName VARCHAR(45)  NOT NULL,
-	birthDate DATE DEFAULT CURRENT_DATE,
+	birthDate DATE ,
 	contact INTEGER NOT NULL,
 	email VARCHAR(45) NOT NULL,
 	address VARCHAR(200) NOT NULL, 
@@ -97,14 +97,14 @@ create table customer_services(
 	paymentType VARCHAR(15) DEFAULT '', 
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`customerServices_id`),
-  	CONSTRAINT `service_details_service_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  	CONSTRAINT `service_detailsCustomer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 create table service_details (
 	service_details_id INTEGER AUTO_INCREMENT, 
 	customer_id INTEGER NOT NULL,
-	customerSerives_id INTEGER NOT NULL, 
+	customerServices_id INTEGER NOT NULL, 
 	service_id INTEGER NOT NULL,
 	product_id INTEGER NOT NULL,
 	quantity INTEGER DEFAULT 1,
@@ -112,7 +112,7 @@ create table service_details (
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`service_details_id`),
 CONSTRAINT `service_details_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-CONSTRAINT `service_details_customerServices_id` FOREIGN KEY (`customerServices_id`) REFERENCES `customerServices` (`customerServices_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+CONSTRAINT `service_details_customerServices_id` FOREIGN KEY (`customerServices_id`) REFERENCES `customer_services` (`customerServices_id`) ON DELETE CASCADE ON UPDATE CASCADE,
 CONSTRAINT `service_details_service_id` FOREIGN KEY (`service_id`) REFERENCES `services` (`service_id`) ON DELETE CASCADE ON UPDATE CASCADE,
 CONSTRAINT `service_details_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE
 
@@ -122,14 +122,16 @@ CONSTRAINT `service_details_product_id` FOREIGN KEY (`product_id`) REFERENCES `p
 
 create table feedback (
 	feedback_id INTEGER AUTO_INCREMENT,
+	emp_id INTEGER NOT NULL,
 	customer_id INTEGER NOT NULL,
+	vendor_id INTEGER NOT NULL,
 	feedback VARCHAR(45),
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`feedback_id`),
   	CONSTRAINT `feedback_emp_id` FOREIGN KEY (`emp_id`) REFERENCES `employee` (`emp_id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT `feedback_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,  
-	CONSTRAINT `feedback_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`vendor_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT `feedback_question_id` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT `feedback_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`vendor_id`) ON DELETE CASCADE ON UPDATE CASCADE
+	
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

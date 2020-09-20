@@ -47,8 +47,6 @@ create table vendor (
 	email VARCHAR(45) NOT NULL,
 	password VARCHAR(150) NOT NULL,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	active INTEGER DEFAULT 0,
-	activationToken VARCHAR(200),
 	PRIMARY KEY (`vendor_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -63,8 +61,6 @@ create table employee (
 	email VARCHAR(45) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	active INTEGER DEFAULT 0,
-	activationToken VARCHAR(200),
 	PRIMARY KEY (`emp_id`),
 	CONSTRAINT `emp_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`vendor_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -102,7 +98,7 @@ create table customer_services(
   	CONSTRAINT `service_detailsCustomer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON UPDATE CASCADE ON DELETE CASCADE 
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 	
-
+   
 
 create table service_details (
 	service_details_id INTEGER AUTO_INCREMENT,
@@ -132,18 +128,28 @@ create table feedback (
 	CONSTRAINT `feedback_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+create table offer (
+    offer_id INT AUTO_INCREMENT,
+    offer_name VARCHAR(100) NOT NULL,
+    offer_discount DECIMAL(10,0) NOT NULL,
+    offer_min_value INT(11),
+    PRIMARY KEY (`offer_id`)
+)
 
+insert into offer values("diwali",.50,5000);
 
 create table invoice (
 	invoice_id INTEGER AUTO_INCREMENT, 
 	totalBill float,
 	service_details_id INTEGER NOT NULL,
 	customer_id INTEGER NOT NULL,
+    offer_id INT NOT NULL,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`invoice_id`),
   	CONSTRAINT `invoice_service_details_id` FOREIGN KEY (`service_details_id`) REFERENCES `service_details` (`service_details_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT `invoice_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE 
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+	CONSTRAINT `invoice_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `invoice_offer_id` FOREIGN KEY (`offer_id`) REFERENCES `offer` (`offer_id`) ON DELETE CASCADE ON UPDATE CASCADE 
+    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 

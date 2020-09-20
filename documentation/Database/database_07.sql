@@ -47,7 +47,7 @@ create table vendor (
 	contact VARCHAR(20) NULL, 
 	email VARCHAR(45) NOT NULL,
 	password VARCHAR(150) NOT NULL,
-	active INTEGER DEFAULT 0,
+	active INTEGER DEFAULT 1,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`vendor_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -62,7 +62,7 @@ create table employee (
 	birthDate DATE , 
 	email VARCHAR(45) NOT NULL,
 	password VARCHAR(100) NOT NULL,
-	active INTEGER DEFAULT 0,
+	active INTEGER DEFAULT 1,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`emp_id`),
 	CONSTRAINT `emp_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`vendor_id`)

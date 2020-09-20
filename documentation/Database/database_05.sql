@@ -47,8 +47,6 @@ create table vendor (
 	email VARCHAR(45) NOT NULL,
 	password VARCHAR(150) NOT NULL,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	active INTEGER DEFAULT 0,
-	activationToken VARCHAR(200),
 	PRIMARY KEY (`vendor_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -63,8 +61,6 @@ create table employee (
 	email VARCHAR(45) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	active INTEGER DEFAULT 0,
-	activationToken VARCHAR(200),
 	PRIMARY KEY (`emp_id`),
 	CONSTRAINT `emp_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`vendor_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;

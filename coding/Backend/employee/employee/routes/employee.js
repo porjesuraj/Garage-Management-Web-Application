@@ -228,7 +228,7 @@ router.post('/signin', (request, response) => {
  *       200:
  *         description: successfull message
  */
-/*
+
 router.put('/', (request, response) => {
     const { vendor_id, firstName, lastName, birthDate, email, password } = request.body
     const encryptedPassword = crypto.SHA256(password)
@@ -266,7 +266,6 @@ router.put('/', (request, response) => {
 
 })
 
-*/
 
 // ------------------------------
 //              DELETE              
@@ -289,7 +288,7 @@ router.put('/', (request, response) => {
  *       200:
  *         description: successfull message
  */
-/*
+
 router.delete('/:empId', (request, response) => {
     const { empId } = request.params
 
@@ -301,6 +300,6 @@ router.delete('/:empId', (request, response) => {
 
 })
 
-*/
 
+// ------------------------------------------------------------------------------------------
 module.exports = router

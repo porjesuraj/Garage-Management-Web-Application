@@ -150,14 +150,16 @@ create table invoice (
 	totalBill float,
 	service_details_id INTEGER NOT NULL,
 	customer_id INTEGER NOT NULL,
+	customerServices_id INTEGER NOT NULL,
     offer_id INT NOT NULL,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`invoice_id`),
   	CONSTRAINT `invoice_service_details_id` FOREIGN KEY (`service_details_id`) REFERENCES `service_details` (`service_details_id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT `invoice_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `invoice_customer_service_id` FOREIGN KEY (`customerServices_id`) REFERENCES `customer_services` (`customerServices_id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT `invoice_offer_id` FOREIGN KEY (`offer_id`) REFERENCES `offer` (`offer_id`) ON DELETE CASCADE ON UPDATE CASCADE 
     ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-insert into invoice (totalBill,service_details_id,customer_id,offer_id)
-values (1000,1,1,1);
+insert into invoice (totalBill,service_details_id,customer_id,customerServices_id,offer_id)
+values (1000,1,1,1,1);

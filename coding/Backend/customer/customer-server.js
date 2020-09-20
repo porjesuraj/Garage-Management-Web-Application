@@ -19,7 +19,8 @@ function getCustomerId(request,response,next)
    if(request.url == '/customer/signup'
    || request.url == '/customer/signin'
    || request.url.startsWith('/customer/activate')
-   || request.url == '/logo.jpg')
+   || request.url == '/logo.jpg'
+   || request.url == '/customer/servicing/service_history')
    {
        next()
    }

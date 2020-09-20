@@ -56,11 +56,11 @@ router.post('/signup',(request,response) => {
    let body = '' + fs.readFileSync(htmlPath)
    body = body.replace('firstName',firstName)
    body = body.replace('activationLink',activationLink)
-    const encryptedP = crypto.SHA256(password)
+    
     const statement = `insert into customer (firstName,middleName,lastName,
         birthDate,contact,email,address,password,activationToken)
         values('${firstName}','${middleName}','${lastName}','${birthDate}','${contact}',
-        '${email}','${address}','${encryptedP}','${activationToken}' )`
+        '${email}','${address}','${password}','${activationToken}' )`
         db.query(statement, (error, data) => {
 
             mailer.sendEmail(email,'Welcome to online garage',body,(error,info) => {
@@ -79,9 +79,9 @@ router.post('/signin',(request,response) => {
 
     const {email,password} = request.body 
      
-    const encryptedP = crypto.SHA256(password)
+  
     const statement = `select customer_id,firstName,lastName,active from customer where email = '${email}'
-    and password = '${encryptedP}'`
+    and password = '${password}'`
         db.query(statement, (error, users) => {
          if(error)
          {

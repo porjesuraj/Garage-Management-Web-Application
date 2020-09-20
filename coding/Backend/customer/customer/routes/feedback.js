@@ -33,7 +33,14 @@ const { request } = require('http')
 
 router.post('/',(request,response) => {
 
-    const {}
+    const {feedback} = request.body
+
+    const statement = `insert into feedback (customer_id,feedback) 
+    values('${request.customerId}','${feedback}')`
+
+    db.query(statement,(error,data) => {
+        response.send(utils.createResult(error,data))
+    })
 })
 
 

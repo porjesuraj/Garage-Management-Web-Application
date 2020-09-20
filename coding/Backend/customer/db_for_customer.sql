@@ -6,6 +6,7 @@ create table services (
 	PRIMARY KEY (`service_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+insert into services (serviceName,servicePrice) values("oil change",500);
 
 
 create table products (
@@ -16,7 +17,7 @@ create table products (
 	PRIMARY KEY (`product_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
+insert into products (productName,productPrice) values('breaks',3000);
 
 create table question (
 	question_id INTEGER NOT NULL AUTO_INCREMENT,
@@ -83,8 +84,8 @@ create table customer (
 	PRIMARY KEY (`customer_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 	
-INSERT INTO customer(firstName,middleName,lastName,birthDate,contact,email,address,password)
-values("suraj","valu","porje",'1994-01-01',9881327553,"testprojectdac@gmail.com","nasik","IndiaIsBest");
+INSERT INTO customer(firstName,middleName,lastName,birthDate,contact,email,address,password,active)
+values("suraj","valu","porje",'1994-01-01',9881327553,"testprojectdac@gmail.com","nasik","IndiaIsBest",1);
 
 create table customer_services(
 	customerServices_id INTEGER AUTO_INCREMENT, 
@@ -98,7 +99,9 @@ create table customer_services(
   	CONSTRAINT `service_detailsCustomer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON UPDATE CASCADE ON DELETE CASCADE 
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 	
-   
+insert into customer_services (customer_id,totalAmount,tax,serviceStatus,paymentType)
+ values(1,10000,0.05*totalAmount,'pending','cod');
+
 
 create table service_details (
 	service_details_id INTEGER AUTO_INCREMENT,
@@ -117,6 +120,10 @@ CONSTRAINT `service_details_product_id` FOREIGN KEY (`product_id`) REFERENCES `p
 
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+insert into service_details (customer_id,customerServices_id,service_id,product_id,quantity,totalAmount)
+values(1,1,1,1,1,100);
+
+				   
 
 
 create table feedback (
@@ -128,28 +135,36 @@ create table feedback (
 	CONSTRAINT `feedback_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-create table offer (
-    offer_id INT AUTO_INCREMENT,
-    offer_name VARCHAR(100) NOT NULL,
-    offer_discount DECIMAL(10,0) NOT NULL,
-    offer_min_value INT(11),
-    PRIMARY KEY (`offer_id`)
-)
+insert into feedback (customer_id,feedback) values(1,"work fast");
 
-insert into offer values("diwali",.50,5000);
+create table offer(
+ offer_id INT AUTO_INCREMENT,
+ offer_name  VARCHAR(150) NOT NULL, 
+ offer_discount DECIMAL(10,0) NOT NULL,
+offer_min_value INT(11),PRIMARY KEY (`offer_id`));
+
+insert into offer (offer_name,offer_discount,offer_min_value) values("diwali",.50,5000);
+
 
 create table invoice (
 	invoice_id INTEGER AUTO_INCREMENT, 
 	totalBill float,
 	service_details_id INTEGER NOT NULL,
 	customer_id INTEGER NOT NULL,
+	customerServices_id INTEGER NOT NULL,
     offer_id INT NOT NULL,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`invoice_id`),
   	CONSTRAINT `invoice_service_details_id` FOREIGN KEY (`service_details_id`) REFERENCES `service_details` (`service_details_id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT `invoice_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `invoice_customer_service_id` FOREIGN KEY (`customerServices_id`) REFERENCES `customer_services` (`customerServices_id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT `invoice_offer_id` FOREIGN KEY (`offer_id`) REFERENCES `offer` (`offer_id`) ON DELETE CASCADE ON UPDATE CASCADE 
     ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+insert into invoice (totalBill,service_details_id,customer_id,customerServices_id,offer_id)
+values (1000,1,1,1,1);
 
+
+			    
+	

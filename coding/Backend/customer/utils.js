@@ -1,4 +1,5 @@
-function createResult(error,data){   return  error ? createError(error): createResult(data) }
+function createResult(error,data){return  error ? createError(error): createSuccess(data) }
+
 function createError(error)
 {
     const result = {}

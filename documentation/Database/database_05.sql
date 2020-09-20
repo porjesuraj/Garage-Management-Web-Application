@@ -122,16 +122,11 @@ CONSTRAINT `service_details_product_id` FOREIGN KEY (`product_id`) REFERENCES `p
 
 create table feedback (
 	feedback_id INTEGER AUTO_INCREMENT,
-	emp_id INTEGER NOT NULL,
 	customer_id INTEGER NOT NULL,
-	vendor_id INTEGER NOT NULL,
 	feedback VARCHAR(45),
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`feedback_id`),
-  	CONSTRAINT `feedback_emp_id` FOREIGN KEY (`emp_id`) REFERENCES `employee` (`emp_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT `feedback_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,  
-	CONSTRAINT `feedback_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`vendor_id`) ON DELETE CASCADE ON UPDATE CASCADE
-	
+	CONSTRAINT `feedback_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

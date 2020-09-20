@@ -4,11 +4,11 @@ const uuid = require('uuid')
 const jwt = require('jsonwebtoken')
 const path = require('path')
 const fs = require('fs')
-const db = require('./../../db')
-const utils = require('./../../utils')
+const db = require('../../db')
+const utils = require('../../utils')
 router = express.Router()
-const mailer = require('./../../mailer')
-const config = require('./../../config')
+const mailer = require('../../mailer')
+const config = require('../../config')
 //---------------------------------------------------------------------------------
 //GET
 //-----------------------------------------------------------------------------------

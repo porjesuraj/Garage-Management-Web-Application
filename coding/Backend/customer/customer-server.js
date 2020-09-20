@@ -2,11 +2,12 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const jwt = require('jsonwebtoken')
-
-
-const customerRouter = require('./customer/routes/customer')
 const config = require('./config')
 const utils = require('./utils')
+//include routing 
+const customerRouter = require('./customer/routes/customer')
+const servicingRouter = require('./customer/routes/servicing')
+const feebackRouter = require('./customer/routes/feedback')
 const app = express()
 app.use(morgan('combined'))
 app.use(bodyParser.json())
@@ -46,6 +47,8 @@ app.use(getCustomerId)
 app.use(express.static('images/'))
 //routes
 app.use('/customer',customerRouter)
+app.use('/customer/servicing',servicingRouter)
+app.use('/customer/feedback',feebackRouter)
 
 app.get('/',(request,response) => {
     response.send('welcome to applicaiton')

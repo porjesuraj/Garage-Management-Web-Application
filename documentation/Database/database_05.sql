@@ -43,7 +43,7 @@ create table vendor (
 	vendor_id INTEGER AUTO_INCREMENT, 
 	name VARCHAR(45) NOT NULL,
 	address VARCHAR(200) NOT NULL,
-	contact INTEGER NOT NULL, 
+	contact VARCHAR(20) NULL, 
 	email VARCHAR(45) NOT NULL,
 	password VARCHAR(150) NOT NULL,
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -77,7 +77,7 @@ create table customer (
 	middleName VARCHAR(45) NOT NULL,
 	lastName VARCHAR(45)  NOT NULL,
 	birthDate DATE ,
-	contact INTEGER NOT NULL,
+	contact VARCHAR(20) NULL,
 	email VARCHAR(45) NOT NULL,
 	address VARCHAR(200) NOT NULL, 
 	password VARCHAR(100) NOT NULL,
@@ -86,7 +86,9 @@ create table customer (
 	activationToken VARCHAR(200),
 	PRIMARY KEY (`customer_id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+	
+INSERT INTO customer(firstName,middleName,lastName,birthDate,contact,email,address,password)
+values("suraj","valu","porje",'1994-01-01',9881327553,"testprojectdac@gmail.com","nasik","IndiaIsBest");
 
 create table customer_services(
 	customerServices_id INTEGER AUTO_INCREMENT, 
@@ -97,12 +99,13 @@ create table customer_services(
 	paymentType VARCHAR(15) DEFAULT '', 
 	createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`customerServices_id`),
-  	CONSTRAINT `service_detailsCustomer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  	CONSTRAINT `service_detailsCustomer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON UPDATE CASCADE ON DELETE CASCADE 
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+	
 
 
 create table service_details (
-	service_details_id INTEGER AUTO_INCREMENT, 
+	service_details_id INTEGER AUTO_INCREMENT,
 	customer_id INTEGER NOT NULL,
 	customerServices_id INTEGER NOT NULL, 
 	service_id INTEGER NOT NULL,

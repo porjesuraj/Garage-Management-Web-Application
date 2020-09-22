@@ -113,7 +113,7 @@ router.post('/signin',(request,response) => {
              }
              else
       {
-        response.send(utils.createResult(error,'contact administrator your account not active'))
+        response.send(utils.createError('contact administrator your account not active'))
       }
 
             

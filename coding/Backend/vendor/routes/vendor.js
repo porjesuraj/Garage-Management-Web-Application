@@ -42,7 +42,7 @@ router.get('/profile', (request, response) => {
 
 router.post('/signin', (request, response) => {
     const {email, password} = request.body
-    const statement = `select vendor_id,name from vendor where email = '${email}' and password = '${password}'`
+    const statement = `select vendor_id,name,active from vendor where email = '${email}' and password = '${password}'`
     db.query(statement, (error, vendors) => {
       if (error) {
         response.send({status: 'error', error: error})
@@ -53,13 +53,35 @@ router.post('/signin', (request, response) => {
         }
         else {
           const vendor = vendors[0]
-          const token = jwt.sign({vendor_id: vendor['vendor_id']}, config.secret)
-          response.send(utils.createResult(error, {
-            Name: vendor['name'],
-            token: token
-          }))
+          if(vendor['active'])
+        {
+            const token = jwt.sign({vendor_id: vendor['vendor_id']}, config.secret)
+            response.send(utils.createResult(error, {
+              Name: vendor['name'],
+              token: token
+            }))
+        }
+        else
+        {
+            response.send(utils.createError('contact administrator account is inactive'))
+        }
+          
         }
       }
+
+//-----------------------------
+
+
+
+//---------------------------
+
+
+
+
+
+
+
+      
     })
   })
 

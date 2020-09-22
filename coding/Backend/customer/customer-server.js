@@ -19,8 +19,7 @@ function getCustomerId(request,response,next)
    if(request.url == '/customer/signup'
    || request.url == '/customer/signin'
    || request.url.startsWith('/customer/activate')
-   || request.url == '/logo.jpg'
-   || request.url == '/customer/servicing/service_history')
+   || request.url == '/logo.jpg')
    {
        next()
    }
@@ -43,6 +42,12 @@ function getCustomerId(request,response,next)
 
 app.use(getCustomerId)
 
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 
 
 app.use(express.static('images/'))

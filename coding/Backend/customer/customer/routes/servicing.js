@@ -65,7 +65,7 @@ router.get('/service_history',(request,response) => {
 
 
 
-router.get('/payment',(request,response) => {
+router.get('/payment',(request,response,next) => {
 
     const statement = `select c.customer_id,CONCAT(c.firstName,lastName) as 'customer name',c.contact,c.email, i.invoice_id,i.totalBill,i.createdOn 
     from invoice i INNER JOIN customer c ON i.customer_id = c.customer_id where i.customer_id = '${request.customerId}' `

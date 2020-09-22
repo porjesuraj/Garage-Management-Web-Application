@@ -13,16 +13,16 @@ const router = express.Router()
 // ----------------------------------------------------
 
 router.get('/profile', (request, response) => {
-  const statement = `select * from vendor where admin_id = '${request.Id}'`
-  db.query(statement, (error, admins) => {
+  const statement = `select * from vendor where vendor_id = '${request.Id}'`
+  db.query(statement, (error, vendors) => {
     if (error) {
       response.send({status: 'error', error: error})
     } else {
-      if (admins.length == 0) {
-        response.send({status: 'error', error: 'admin does not exist'})
+      if (vendors.length == 0) {
+        response.send({status: 'error', error: 'vendor does not exist'})
       } else {
-        const admin = admins[0]
-        response.send(utils.createResult(error, admin))
+        const vendor = vendors[0]
+        response.send(utils.createResult(error,vendor))
       }
     }
   })

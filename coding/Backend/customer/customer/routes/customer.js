@@ -13,6 +13,22 @@ const config = require('../../config')
 //GET
 //-----------------------------------------------------------------------------------
 
+router.get('/profile', (request, response) => {
+    const statement = `select * from customer where customer_id = '${request.customerId}'`
+    db.query(statement, (error, customers) => {
+      if (error) {
+        response.send({status: 'error', error: error})
+      } else {
+        if (customers.length == 0) {
+          response.send({status: 'error', error: 'customer does not exist'})
+        } else {
+          const customer = customers[0]
+          response.send(utils.createResult(error,customer))
+        }
+      }
+    })
+  })
+
 router.get('/activate/:token',(request,response) => {
     const{token} = request.params
          const activatestatement = `update customer set active = 1, 
@@ -30,15 +46,6 @@ router.get('/activate/:token',(request,response) => {
 
 
   })
-
-
-
-
-
-
-
-
-
 
 
 
@@ -119,13 +126,6 @@ router.post('/signin',(request,response) => {
 
 
 //-------------------------------------------------------------------------------
-
-
-
-
-
-
-
 
 
 module.exports = router

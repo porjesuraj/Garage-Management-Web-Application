@@ -26,7 +26,7 @@ function getUserId(request, response, next) {
       const token = request.headers['token']
       const data = jwt.verify(token, config.secret)
 
-      request.Id = data['admin_id']
+      request.Id = data['vendor_id']
 
       next()
       

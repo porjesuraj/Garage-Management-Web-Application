@@ -10,9 +10,58 @@ const router = express.Router()
 // ------------------------------------------------------------------------------------------
 // ------------------------------             GET              ------------------------------
 // ------------------------------------------------------------------------------------------
-
+/**
+ * @swagger
+ *
+ * /employee/jobcard/create:
+ *   post:
+ *     description: For creating a jobcard
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: customer_id
+ *         description: id of customer
+ *         in: formData
+ *         required: true
+ *         type: number
+ *       - name: customerServices_id
+ *         description: id of servicing.
+ *         in: formData
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: successfull message
+ */
 router.get('/', (request, response) => {
-    response.send('indide get/jobcard')
+
+    const { customer_id, customerServices_id } = request.body
+
+    const statement = ` 
+            SELECT sd.service_details_id, sd.service_id, p.productName, sd.price, sd.quantity, sd.totalAmount,
+            (sd.totalAmount * 0.18) as 'tax',
+            (1.18 * sd.totalAmount) as 'total Amount',
+            (cs.totalAmount + cs.tax) as 'Bill Amount'
+            FROM service_details sd INNER JOIN products p
+                ON sd.product_id = p.product_id
+                INNER JOIN customer_services cs
+                ON cs.customerServices_id = sd.customerServices_id
+            WHERE sd.customer_id = 1 and sd.customerServices_id = 6
+    UNION
+            SELECT sd.service_details_id, s.serviceName, sd.product_id, sd.price, sd.quantity, sd.totalAmount,
+                (sd.totalAmount * 0.18) as 'tax',
+                (1.18 * sd.totalAmount) as 'total Amount',
+                (cs.totalAmount + cs.tax) as 'Bill Amount'
+            FROM service_details sd INNER JOIN services s
+                ON sd.service_id = s.service_id
+                INNER JOIN customer_services cs
+                ON cs.customerServices_id = sd.customerServices_id
+            WHERE sd.customer_id = ${customer_id} and sd.customerServices_id = ${customerServices_id} `
+
+    db.query(statement, (error, data) => {
+        response.send(utils.createResult(error, data))
+    })
+
 })
 
 
@@ -24,6 +73,115 @@ router.get('/', (request, response) => {
  *
  * /employee/jobcard/create:
  *   post:
+ *     description: For creating a jobcard
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: customer_id
+ *         description: id of customer
+ *         in: formData
+ *         required: true
+ *         type: number
+ *       - name: serviceStatus
+ *         description: status of servicing.
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: paymentType
+ *         description: mode of payment.
+ *         in: formData
+ *         required: true
+ *         type: string
+*       - name: products
+ *         description: list of products that to be replaces.
+ *         in: formData
+ *         required: true
+ *         type: object
+ *         properties:
+ *          product_id:
+ *            type: integer
+ *          price:
+ *           type: integer
+ *          quantity:
+ *           type: integer
+ *       - name: services
+ *         description: list of services given to customer.
+ *         in: formData
+ *         required: true
+ *         type: object
+ *         properties:
+ *          service_id:
+ *            type: integer
+ *          price:
+ *           type: integer
+ *          quantity:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: successfull message
+ */
+router.post('/create', (request, response) => {
+
+    const { customer_id, serviceStatus, paymentType, products, services } = request.body
+
+    const statementBooking = ` insert into customer_services (customer_id, serviceStatus, paymentType ) values ( '${customer_id}', '${serviceStatus}', '${paymentType}'  )`
+
+    db.query(statementBooking, (error, data) => {
+        const cusServId = data['insertId']
+
+        let statementProduct = `INSERT INTO service_details (customer_id, customerServices_id, product_id, price, quantity, totalAmount) values `
+
+        let totalPrice = 0
+
+        for (let index = 0; index < products.length; index++) {
+            const product = products[index];
+
+            if (index > 0) { statementProduct += ', ' }
+
+            statementProduct += `( 
+                    ${customer_id}, ${cusServId}, ${product['product_id']}, ${product['price']}, ${product['quantity']}, ${product['price'] * product['quantity']} )`
+
+            totalPrice += (product['price'] * product['quantity'])
+        }
+
+        db.query(statementProduct, (error, data) => {
+
+            let statementServices = `INSERT INTO service_details (customer_id, customerServices_id, service_id, price, quantity, totalAmount) values `
+
+            for (let index = 0; index < services.length; index++) {
+                const service = services[index];
+
+                if (index > 0) { statementServices += ', ' }
+
+                statementServices += `( 
+                        ${customer_id}, ${cusServId}, ${service['service_id']}, ${service['price']}, ${service['quantity']}, ${service['price'] * service['quantity']} )`
+
+                totalPrice += (service['price'] * service['quantity'])
+            }
+
+            db.query(statementServices, (error, data) => {
+                let tax = (0.18 * totalPrice)
+                let statementUpdate = `UPDATE customer_services SET totalAmount = ${totalPrice} , tax = ${tax}   where customerServices_id = ${cusServId}`
+
+                db.query(statementUpdate, (error, data) => {
+                    response.send(utils.createSuccess('Jobcard Created'))
+                })
+
+            })
+        })
+
+    })
+})
+
+
+// ------------------------------------------------------------------------------------------
+// ------------------------------             PUT              ------------------------------
+// ------------------------------------------------------------------------------------------
+/**
+ * @swagger
+ *
+ * /employee/jobcard/:customerServices_id:
+ *   put:
  *     description: For creating a jobcard
  *     produces:
  *       - application/json
@@ -81,106 +239,59 @@ router.get('/', (request, response) => {
  *       200:
  *         description: successfull message
  */
-router.post('/create', (request, response) => {
+router.put('/:customerServices_id', (request, response) => {
 
-    const { customer_id, totalAmount, tax, serviceStatus, paymentType, products, services } = request.body
+    const { customerServices_id } = request.params
+    const { service_details_id, customer_id, totalAmount, tax, serviceStatus, paymentType, products, services } = request.body
 
-    const statementBooking = ` insert into customer_services (customer_id, totalAmount, tax, serviceStatus, paymentType ) values 
-            ( '${customer_id}', '${totalAmount}', '${tax}', '${serviceStatus}', '${paymentType}'  )`
+    console.log("request.params = ");
+    console.log(request.params);
+    console.log("request.body = ");
+    console.log(request.body);
+
+    const statementBooking = ` UPDATE customer_services SET 
+            customer_id = '${customer_id}', 
+            totalAmount = '${totalAmount}',
+            tax = '${tax}',
+            serviceStatus = '${serviceStatus}',
+            paymentType = '${paymentType}'
+            where customerServices_id = ${customerServices_id}   `
 
     db.query(statementBooking, (error, data) => {
-        const cusServId = data['insertId']
 
-        let statementProduct = `INSERT INTO service_details (customer_id, customerServices_id, service_id ,product_id, price, quantity, totalAmount) values `
+        const type = ` SELECT service_id FROM service_details WHERE service_details_id = ${service_details_id} `
 
-        for (let index = 0; index < products.length; index++) {
-            const product = products[index];
+        const statementUpdate = `   UPDATE service_details SET `
 
-            if (index > 0) { statementProduct += ', ' }
-
-            statementProduct += `( 
-                    ${customer_id}, ${cusServId}, 1, ${product['product_id']}, ${product['price']}, ${product['quantity']}, ${product['price'] * product['quantity']} 
-                )`
+        if (type == 'NULL') {
+            statementUpdate += ` product_id = ${product['product_id']}, 
+                price = ${product['price']},
+                quantity = ${product['quantity']},
+                totalAmount = ${product['price'] * product['quantity']}
+                where customerServices_id = ${customerServices_id}      `
         }
-
-        db.query(statementProduct, (error, data) => {
-            console.log("product_data = ");
-            console.log(data);
-
-            let statementServices = `INSERT INTO service_details (customer_id, customerServices_id, service_id ,product_id, price, quantity, totalAmount) values `
-
-            for (let index = 0; index < services.length; index++) {
-                const service = services[index];
-
-                if (index > 0) { statementServices += ', ' }
-
-                statementServices += `( 
-                        ${customer_id}, ${cusServId}, ${service['service_id']}, 1, ${service['price']}, ${service['quantity']}, ${service['price'] * service['quantity']} 
-                    )`
-            }
-
-            db.query(statementServices, (error, data) => {
-                response.send(utils.createSuccess('placed order'))
-                console.log(data);
-            })
-        })
+        else {
+            statementUpdate += ` service_id = ${service['service_id']},
+                price = ${service['price']},
+                quantity = ${service['quantity']},
+                totalAmount = ${service['price'] * service['quantity']}
+                where customerServices_id = ${customerServices_id}`
+        }
 
     })
 
+    db.query(statementUpdate, (error, data) => {
+
+        console.log("error = ");
+        console.log(error);
+        console.log("data = ");
+        console.log(data);
+        response.send(utils.createSuccess('jobcard updated'))
+        console.log(data);
+
+
+    })
 })
-
-
-// ------------------------------------------------------------------------------------------
-// ------------------------------             PUT              ------------------------------
-// ------------------------------------------------------------------------------------------
-/**
- * @swagger
- *
- * /employee/jobcard/:
- *   put:
- *     description: For updating an employee profile
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: vendor_id
- *         description: id of vendor
- *         in: formData
- *         required: true
- *         type: number
- *       - name: firstName
- *         description: first name of employee user.
- *         in: formData
- *         required: true
- *         type: string
- *       - name: lasttName
- *         description: last name of employee user.
- *         in: formData
- *         required: true
- *         type: string
- *       - name: birthDate
- *         description: birthdate of employee user.
- *         in: formData
- *         required: true
- *         type: date
- *       - name: email
- *         description: email of employee user.
- *         in: formData
- *         required: true
- *         type: string
- *       - name: password
- *         description: employee's password.
- *         in: formData
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: successfull message
- */
-
-router.put('/', (request, response) => {
-    response.send('inside put/jobcard')
-})
-
 
 // ------------------------------------------------------------------------------------------
 // ------------------------------            DELETE            ------------------------------

@@ -37,6 +37,8 @@ router.get('/', (request, response) => {
 
     const { customer_id, customerServices_id } = request.body
 
+
+
     const statement = ` 
             SELECT sd.service_details_id, sd.service_id, p.productName, sd.price, sd.quantity, sd.totalAmount,
             (sd.totalAmount * 0.18) as 'tax',
@@ -242,12 +244,8 @@ router.post('/create', (request, response) => {
 router.put('/:customerServices_id', (request, response) => {
 
     const { customerServices_id } = request.params
-    const { service_details_id, customer_id, totalAmount, tax, serviceStatus, paymentType, products, services } = request.body
+    const { service_details_id, customer_id, totalAmount, tax, serviceStatus, paymentType, product, service } = request.body
 
-    console.log("request.params = ");
-    console.log(request.params);
-    console.log("request.body = ");
-    console.log(request.body);
 
     const statementBooking = ` UPDATE customer_services SET 
             customer_id = '${customer_id}', 
@@ -261,7 +259,11 @@ router.put('/:customerServices_id', (request, response) => {
 
         const type = ` SELECT service_id FROM service_details WHERE service_details_id = ${service_details_id} `
 
-        const statementUpdate = `   UPDATE service_details SET `
+        console.log("type = ");
+        console.log(`type = ${type}`);
+
+        let statementUpdate = `   UPDATE service_details SET `
+
 
         if (type == 'NULL') {
             statementUpdate += ` product_id = ${product['product_id']}, 
@@ -269,6 +271,7 @@ router.put('/:customerServices_id', (request, response) => {
                 quantity = ${product['quantity']},
                 totalAmount = ${product['price'] * product['quantity']}
                 where customerServices_id = ${customerServices_id}      `
+
         }
         else {
             statementUpdate += ` service_id = ${service['service_id']},
@@ -278,18 +281,14 @@ router.put('/:customerServices_id', (request, response) => {
                 where customerServices_id = ${customerServices_id}`
         }
 
-    })
-
-    db.query(statementUpdate, (error, data) => {
-
-        console.log("error = ");
-        console.log(error);
-        console.log("data = ");
-        console.log(data);
-        response.send(utils.createSuccess('jobcard updated'))
-        console.log(data);
-
-
+        db.query(statementUpdate, (error, data) => {
+            console.log("error = ");
+            console.log(error);
+            console.log("data = ");
+            console.log(data);
+            response.send(utils.createSuccess('jobcard updated'))
+            console.log(data);
+        })
     })
 })
 
@@ -315,23 +314,16 @@ router.put('/:customerServices_id', (request, response) => {
  *         description: successfull message
  */
 
-/* router.delete('/:customerService_id', (request, response) => {
+router.delete('/:customerService_id', (request, response) => {
 
     const { customerService_id } = request.params
 
-    const serviceDetailsId = `select service_details_id from service_details where customerService_id = ${customerService_id} `
-
-    const customerStatement = `delete from customer_services where customerService_id = ${customerService_id} `
+    const customerStatement = `delete from customer_services where customerServices_id = ${customerService_id} `
     db.query(customerStatement, (error, data) => {
         response.send(utils.createResult(error, data))
     })
 
-    const serviceStatement = `delete from service_details where service_details_id = ${serviceDetailsId} `
-    db.query(serviceStatement, (error, data) => {
-        response.send(utils.createResult(error, data))
-    })
-
-}) */
+})
 
 
 // ------------------------------------------------------------------------------------------

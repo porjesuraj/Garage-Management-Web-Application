@@ -1,6 +1,5 @@
 const { request, response } = require('express')
 const express = require('express')
-
 const db = require('../../db')
 const utils = require('../../utils')
 
@@ -36,8 +35,6 @@ const router = express.Router()
 router.get('/', (request, response) => {
 
     const { customer_id, customerServices_id } = request.body
-
-
 
     const statement = ` 
             SELECT sd.service_details_id, sd.service_id, p.productName, sd.price, sd.quantity, sd.totalAmount,
@@ -126,7 +123,7 @@ router.post('/create', (request, response) => {
 
     const { customer_id, serviceStatus, paymentType, products, services } = request.body
 
-    const statementBooking = ` insert into customer_services (customer_id, serviceStatus, paymentType ) values ( '${customer_id}', '${serviceStatus}', '${paymentType}'  )`
+    const statementBooking = ` INSERT INTO customer_services (customer_id, serviceStatus, paymentType ) values ( '${customer_id}', '${serviceStatus}', '${paymentType}'  )`
 
     db.query(statementBooking, (error, data) => {
         const cusServId = data['insertId']
@@ -163,7 +160,7 @@ router.post('/create', (request, response) => {
 
             db.query(statementServices, (error, data) => {
                 let tax = (0.18 * totalPrice)
-                let statementUpdate = `UPDATE customer_services SET totalAmount = ${totalPrice} , tax = ${tax}   where customerServices_id = ${cusServId}`
+                let statementUpdate = `UPDATE customer_services SET totalAmount = ${totalPrice} , tax = ${tax}   WHERE customerServices_id = ${cusServId}`
 
                 db.query(statementUpdate, (error, data) => {
                     response.send(utils.createSuccess('Jobcard Created'))
@@ -241,56 +238,58 @@ router.post('/create', (request, response) => {
  *       200:
  *         description: successfull message
  */
+
+//  customer_services
+// customerServices_id, customer_id, totalAmount, tax, serviceStatus, paymentType
+
+// service_details
+// service_details_id, customer_id, customerServices_id, service_id, product_id, price, quantity, totalAmount
+
 router.put('/:customerServices_id', (request, response) => {
-
     const { customerServices_id } = request.params
-    const { service_details_id, customer_id, totalAmount, tax, serviceStatus, paymentType, product, service } = request.body
+    const { service_details_id, customer_id, serviceStatus, paymentType, package } = request.body
 
-
-    const statementBooking = ` UPDATE customer_services SET 
-            customer_id = '${customer_id}', 
-            totalAmount = '${totalAmount}',
-            tax = '${tax}',
-            serviceStatus = '${serviceStatus}',
-            paymentType = '${paymentType}'
-            where customerServices_id = ${customerServices_id}   `
+    let statementBooking = ` UPDATE customer_services SET customer_id = '${customer_id}', serviceStatus = '${serviceStatus}', paymentType = '${paymentType}'
+            WHERE customerServices_id = ${customerServices_id}  `
 
     db.query(statementBooking, (error, data) => {
+        const getTotalAmount = `SELECT totalAmount FROM customer_services WHERE customerServices_id = ${customerServices_id}  `
 
-        const type = ` SELECT service_id FROM service_details WHERE service_details_id = ${service_details_id} `
+        db.query(getTotalAmount, (error, data) => {
+            const oldTotalAmount = (data[0].totalAmount);
+            const packageStatement = `SELECT totalAmount, service_id FROM service_details WHERE service_details_id = ${service_details_id}`
 
-        console.log("type = ");
-        console.log(`type = ${type}`);
+            db.query(packageStatement, (error, data) => {
+                const oldPackageAmount = (data[0].totalAmount);
+                const type = (data[0].service_id);
 
-        let statementUpdate = `   UPDATE service_details SET `
+                if (type == null) {
+                    updatePackageStatement = `UPDATE service_details SET customer_id = ${customer_id}, product_id = ${package['product_id']}, price = ${package['price']},
+                        quantity = ${package['quantity']}, totalAmount = ${package['price'] * package['quantity']}
+                        WHERE service_details_id = ${service_details_id}    `
+                } else {
+                    updatePackageStatement = `UPDATE service_details SET customer_id = ${customer_id}, product_id = ${package['service_id']}, price = ${package['price']},
+                        quantity = '${package['quantity']}', totalAmount = '${package['price'] * package['quantity']}',
+                        WHERE service_details_id = ${service_details_id}    `
+                }
 
+                let packagePrice = (package['price'] * package['quantity'])
+                const updatedTotalAmount = oldTotalAmount - oldPackageAmount + packagePrice
+                const updatedTax = (0.18 * updatedTotalAmount)
 
-        if (type == 'NULL') {
-            statementUpdate += ` product_id = ${product['product_id']}, 
-                price = ${product['price']},
-                quantity = ${product['quantity']},
-                totalAmount = ${product['price'] * product['quantity']}
-                where customerServices_id = ${customerServices_id}      `
+                db.query(updatePackageStatement, (error, data) => {
+                    let statementUpdate = `UPDATE customer_services SET totalAmount = ${updatedTotalAmount} , tax = ${updatedTax}  
+                        WHERE customerServices_id = ${customerServices_id}`
 
-        }
-        else {
-            statementUpdate += ` service_id = ${service['service_id']},
-                price = ${service['price']},
-                quantity = ${service['quantity']},
-                totalAmount = ${service['price'] * service['quantity']}
-                where customerServices_id = ${customerServices_id}`
-        }
-
-        db.query(statementUpdate, (error, data) => {
-            console.log("error = ");
-            console.log(error);
-            console.log("data = ");
-            console.log(data);
-            response.send(utils.createSuccess('jobcard updated'))
-            console.log(data);
+                    db.query(statementUpdate, (error, data) => {
+                        response.send(utils.createSuccess('Successfully updated'))
+                    })
+                })
+            })
         })
     })
 })
+
 
 // ------------------------------------------------------------------------------------------
 // ------------------------------            DELETE            ------------------------------
@@ -318,7 +317,7 @@ router.delete('/:customerService_id', (request, response) => {
 
     const { customerService_id } = request.params
 
-    const customerStatement = `delete from customer_services where customerServices_id = ${customerService_id} `
+    const customerStatement = `delete FROM customer_services WHERE customerServices_id = ${customerService_id} `
     db.query(customerStatement, (error, data) => {
         response.send(utils.createResult(error, data))
     })

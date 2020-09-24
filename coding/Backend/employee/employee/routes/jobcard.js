@@ -99,8 +99,6 @@ router.get('/', (request, response) => {
  *         properties:
  *          product_id:
  *            type: integer
- *          price:
- *           type: integer
  *          quantity:
  *           type: integer
  *       - name: services
@@ -111,8 +109,6 @@ router.get('/', (request, response) => {
  *         properties:
  *          service_id:
  *            type: integer
- *          price:
- *           type: integer
  *          quantity:
  *           type: integer
  *     responses:
@@ -122,6 +118,24 @@ router.get('/', (request, response) => {
 router.post('/create', (request, response) => {
 
     const { customer_id, serviceStatus, paymentType, products, services } = request.body
+
+    const productPriceArray = []
+    const servicePriceArray = []
+
+    for (let index = 0; index < products.length; index++) {
+        let priceStatement = ` select productPrice from products where product_id = ${products[index]['product_id']} `
+        db.query(priceStatement, (error, data) => {
+            productPriceArray.push(data[0].productPrice)
+            // console.log(productPriceArray);
+        })
+    }
+    for (let index = 0; index < services.length; index++) {
+        let priceStatement = ` select servicePrice from services where service_id = ${services[index]['service_id']} `
+        db.query(priceStatement, (error, data) => {
+            servicePriceArray.push(data[0].servicePrice)
+            // console.log(servicePriceArray);
+        })
+    }
 
     const statementBooking = ` INSERT INTO customer_services (customer_id, serviceStatus, paymentType ) values ( '${customer_id}', '${serviceStatus}', '${paymentType}'  )`
 
@@ -138,9 +152,9 @@ router.post('/create', (request, response) => {
             if (index > 0) { statementProduct += ', ' }
 
             statementProduct += `( 
-                    ${customer_id}, ${cusServId}, ${product['product_id']}, ${product['price']}, ${product['quantity']}, ${product['price'] * product['quantity']} )`
+                    ${customer_id}, ${cusServId}, ${product['product_id']}, ${productPriceArray[index]}, ${product['quantity']}, ${productPriceArray[index] * product['quantity']} )`
 
-            totalPrice += (product['price'] * product['quantity'])
+            totalPrice += (productPriceArray[index] * product['quantity'])
         }
 
         db.query(statementProduct, (error, data) => {
@@ -153,9 +167,9 @@ router.post('/create', (request, response) => {
                 if (index > 0) { statementServices += ', ' }
 
                 statementServices += `( 
-                        ${customer_id}, ${cusServId}, ${service['service_id']}, ${service['price']}, ${service['quantity']}, ${service['price'] * service['quantity']} )`
+                        ${customer_id}, ${cusServId}, ${service['service_id']}, ${servicePriceArray[index]}, ${service['quantity']}, ${servicePriceArray[index] * service['quantity']} )`
 
-                totalPrice += (service['price'] * service['quantity'])
+                totalPrice += (servicePriceArray[index] * service['quantity'])
             }
 
             db.query(statementServices, (error, data) => {

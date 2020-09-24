@@ -192,13 +192,18 @@ router.post('/create', (request, response) => {
 // ------------------------------------------------------------------------------------------
 /**
  * @swagger
- *
+ *  
  * /employee/jobcard/:customerServices_id:
  *   put:
  *     description: For creating a jobcard
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: service_details_id
+ *         description: jobcard id
+ *         in: formData
+ *         required: true
+ *         type: number
  *       - name: customer_id
  *         description: id of customer
  *         in: formData
@@ -224,40 +229,20 @@ router.post('/create', (request, response) => {
  *         in: formData
  *         required: true
  *         type: string
-*       - name: products
- *         description: list of products that to be replaces.
+*       - name: package
+ *         description: product or service that to be replaces.
  *         in: formData
  *         required: true
  *         type: object
  *         properties:
- *          product_id:
+ *          product_id/service_id:
  *            type: integer
- *          price:
- *           type: integer
- *          quantity:
- *           type: integer
- *       - name: services
- *         description: list of services given to customer.
- *         in: formData
- *         required: true
- *         type: object
- *         properties:
- *          service_id:
- *            type: integer
- *          price:
- *           type: integer
  *          quantity:
  *           type: integer
  *     responses:
  *       200:
  *         description: successfull message
  */
-
-//  customer_services
-// customerServices_id, customer_id, totalAmount, tax, serviceStatus, paymentType
-
-// service_details
-// service_details_id, customer_id, customerServices_id, service_id, product_id, price, quantity, totalAmount
 
 router.put('/:customerServices_id', (request, response) => {
     const { customerServices_id } = request.params
@@ -278,27 +263,51 @@ router.put('/:customerServices_id', (request, response) => {
                 const type = (data[0].service_id);
 
                 if (type == null) {
-                    updatePackageStatement = `UPDATE service_details SET customer_id = ${customer_id}, product_id = ${package['product_id']}, price = ${package['price']},
-                        quantity = ${package['quantity']}, totalAmount = ${package['price'] * package['quantity']}
+                    let priceStatement = ` select productPrice from products where product_id = ${package['product_id']} `
+
+                    db.query(priceStatement, (error, data) => {
+                        const productPrice = (data[0].productPrice)
+                        let packagePrice = (productPrice * package['quantity'])
+                        const updatedTotalAmount = oldTotalAmount - oldPackageAmount + packagePrice
+                        const updatedTax = (0.18 * updatedTotalAmount)
+
+                        updatePackageStatement = `UPDATE service_details SET customer_id = ${customer_id}, product_id = ${package['product_id']}, price = ${productPrice},
+                        quantity = ${package['quantity']}, totalAmount = ${productPrice * package['quantity']}
                         WHERE service_details_id = ${service_details_id}    `
-                } else {
-                    updatePackageStatement = `UPDATE service_details SET customer_id = ${customer_id}, product_id = ${package['service_id']}, price = ${package['price']},
-                        quantity = '${package['quantity']}', totalAmount = '${package['price'] * package['quantity']}',
-                        WHERE service_details_id = ${service_details_id}    `
-                }
 
-                let packagePrice = (package['price'] * package['quantity'])
-                const updatedTotalAmount = oldTotalAmount - oldPackageAmount + packagePrice
-                const updatedTax = (0.18 * updatedTotalAmount)
+                        db.query(updatePackageStatement, (error, data) => {
+                            let statementUpdate = `UPDATE customer_services SET totalAmount = ${updatedTotalAmount} , tax = ${updatedTax}  
+                                WHERE customerServices_id = ${customerServices_id}`
 
-                db.query(updatePackageStatement, (error, data) => {
-                    let statementUpdate = `UPDATE customer_services SET totalAmount = ${updatedTotalAmount} , tax = ${updatedTax}  
-                        WHERE customerServices_id = ${customerServices_id}`
-
-                    db.query(statementUpdate, (error, data) => {
-                        response.send(utils.createSuccess('Successfully updated'))
+                            db.query(statementUpdate, (error, data) => {
+                                response.send(utils.createSuccess('Successfully updated'))
+                            })
+                        })
                     })
-                })
+
+                } else {
+                    let priceStatement = ` select servicePrice from services where service_id = ${package['service_id']} `
+                    db.query(priceStatement, (error, data) => {
+                        const servicePrice = (data[0].servicePrice)
+                        let packagePrice = (servicePrice * package['quantity'])
+                        const updatedTotalAmount = oldTotalAmount - oldPackageAmount + packagePrice
+                        const updatedTax = (0.18 * updatedTotalAmount)
+
+                        updatePackageStatement = `UPDATE service_details SET customer_id = ${customer_id}, product_id = ${package['service_id']}, price = ${servicePrice},
+                        quantity = '${package['quantity']}', totalAmount = '${servicePrice * package['quantity']}',
+                        WHERE service_details_id = ${service_details_id}    `
+
+                        db.query(updatePackageStatement, (error, data) => {
+                            let statementUpdate = `UPDATE customer_services SET totalAmount = ${updatedTotalAmount} , tax = ${updatedTax}  
+                                WHERE customerServices_id = ${customerServices_id}`
+
+                            db.query(statementUpdate, (error, data) => {
+                                response.send(utils.createSuccess('Successfully updated'))
+                            })
+                        })
+
+                    })
+                }
             })
         })
     })

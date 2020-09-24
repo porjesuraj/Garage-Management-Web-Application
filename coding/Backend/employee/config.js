@@ -3,3 +3,4 @@ module.exports = {
     emailGMS: 'mystoretrial@gmail.com',
     emailPassword: 'Kiran@1795'
 }
+

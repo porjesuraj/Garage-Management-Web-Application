@@ -8,6 +8,8 @@ const config = require('./config')
 
 
 const vendorRouter = require('./routes/vendor')
+const employeeRouter = require('./routes/employee')
+const customerRouter = require('./routes/customer')
 
 
 
@@ -42,6 +44,9 @@ app.use(getUserId)
 
 
 app.use('/vendor', vendorRouter)
+app.use('/employee', employeeRouter)
+app.use('/customer', customerRouter)
+
 
 
 

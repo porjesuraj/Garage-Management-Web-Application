@@ -28,11 +28,6 @@ router.get('/profile', (request, response) => {
   })
 })
 
-// ----------------------------------------------------
-// POST------------Signup
-// ----------------------------------------------------
-
-
 
 // ----------------------------------------------------
 // POST------------Signin
@@ -42,6 +37,7 @@ router.get('/profile', (request, response) => {
 
 router.post('/signin', (request, response) => {
     const {email, password} = request.body
+
     const statement = `select vendor_id,name,active from vendor where email = '${email}' and password = '${password}'`
     db.query(statement, (error, vendors) => {
       if (error) {
@@ -68,33 +64,8 @@ router.post('/signin', (request, response) => {
           
         }
       }
-
-//-----------------------------
-
-
-
-//---------------------------
-
-
-
-
-
-
-
-      
     })
   })
-
-  // ----------------------------------------------------
-// PUT
-// ----------------------------------------------------
-
-  
-
-
-// ----------------------------------------------------
-// DELETE
-// ----------------------------------------------------
 
 
 

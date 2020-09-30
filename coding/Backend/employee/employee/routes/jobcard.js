@@ -45,7 +45,7 @@ router.get('/', (request, response) => {
                 ON sd.product_id = p.product_id
                 INNER JOIN customer_services cs
                 ON cs.customerServices_id = sd.customerServices_id
-            WHERE sd.customer_id = 1 and sd.customerServices_id = 6
+            WHERE sd.customer_id = ${customer_id} and sd.customerServices_id = ${customerServices_id}
     UNION
             SELECT sd.service_details_id, s.serviceName, sd.product_id, sd.price, sd.quantity, sd.totalAmount,
                 (sd.totalAmount * 0.18) as 'tax',

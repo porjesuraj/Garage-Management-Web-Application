@@ -9,4 +9,6 @@ public interface IAdminService {
 
 	List<Admin> getAllAdmins();
 	List<Vendor> getAllVendors();
+	
+	
 }

@@ -64,6 +64,9 @@ public class AdminController {
 	public Admin createAdmin(@Valid @RequestBody Admin admin) {
 		return adminDao.save(admin);
 	}
+	
+	
+	
 
 	// ---------------------------------------------------------------------------
 	// List of all vendors
@@ -87,6 +90,22 @@ public class AdminController {
 	public Vendor createVendor(@Valid @RequestBody Vendor vendor) {
 		return vendorDao.save(vendor);
 	}
+	
+	
+	// ---------------------------------------------------------------------------
+		// Add vendor
+		// ---------------------------------------------------------------------------
+		@GetMapping("/vendor/signin/{email}/{password}")
+		public Vendor authenticateVendor(@PathVariable String email,@PathVariable String password) {
+			
+			System.out.println(email + password);
+			 Vendor v =  vendorDao.findByEmailAndPassword(email, password)  ;
+			 
+			 if(v != null)
+				 return v; 
+			 else
+				 return null; 
+		}
 
 	// ---------------------------------------------------------------------------
 	// Delete vendor

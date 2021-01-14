@@ -6,4 +6,5 @@ import com.app.pojos.Vendor;;
 
 public interface VendorDao extends JpaRepository<Vendor, Integer> {
 
+	Vendor findByEmailAndPassword(String email,String password); 
 }

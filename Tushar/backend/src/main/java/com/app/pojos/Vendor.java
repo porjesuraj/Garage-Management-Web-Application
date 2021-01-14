@@ -43,7 +43,7 @@ public class Vendor {
 	private String password;
 
 	@JsonProperty("active")
-	private int active;
+	private boolean active;
 
 	
 	
@@ -55,18 +55,20 @@ public class Vendor {
 		System.out.println("in vendor constructor");
 	}
 
-	public Vendor(String name, String address, String contact, String email, String password) {
+	public Vendor(String name, String address, String contact, String email, String password, boolean active) {
 		super();
-		//this.vendor_id = vendor_id;
 		this.name = name;
 		this.address = address;
 		this.contact = contact;
 		this.email = email;
 		this.password = password;
-		this.active = 1;
+		this.active = active;
 	}
+	
 
 	/* =========================== Getters & Setters =========================== */
+
+	
 
 	public int getVendor_Id() {
 		return vendor_id;
@@ -116,14 +118,19 @@ public class Vendor {
 		this.password = password;
 	}
 
-	public int getActive() {
+	
+	
+	
+	
+	
+	public boolean isActive() {
 		return active;
 	}
 
-	public void setActive(int active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
-	
+
 	public List<Employee> getEmployees(){
 		return employees; 
 	}
@@ -147,11 +154,13 @@ public class Vendor {
 		 e.setVendor(null);
 	 }
 
-	/* ================================ toString ================================ */
-	@Override
-	public String toString() {
-		return "Vendor [vendor_id=" + vendor_id + ", name=" + name + ", address=" + address + ", contact=" + contact + ", email="
-				+ email + ", password=" + password + ", active=" + active + "]";
-	}
+	
 
+	/* ================================ toString ================================ */
+	 @Override
+		public String toString() {
+			return "Vendor [vendor_id=" + vendor_id + ", name=" + name + ", address=" + address + ", contact=" + contact
+					+ ", email=" + email + ", password=" + password + ", active=" + active + ", employees=" + employees
+					+ "]";
+		}
 }

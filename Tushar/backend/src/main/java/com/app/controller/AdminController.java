@@ -122,15 +122,15 @@ public class AdminController {
 	// ---------------------------------------------------------------------------
 	// Block/Unblock vendor
 	// ---------------------------------------------------------------------------
-	@PutMapping("/blockVendor/{id}")
-	public ResponseEntity<Vendor> blockUnblockEmployee(@PathVariable(value = "id") int vendor_Id,
-			@Valid @RequestBody Vendor vendorDetails) throws Exception {
-		Vendor vendor = vendorDao.findById(vendor_Id)
-				.orElseThrow(() -> new Exception("Vendor not found for this id :: " + vendor_Id));
-
-		vendor.setActive(vendorDetails.getActive());
-		final Vendor updatedEmployee = vendorDao.save(vendor);
-		return ResponseEntity.ok(updatedEmployee);
-	}
-
+	/*
+	 * @PutMapping("/blockVendor/{id}") public ResponseEntity<Vendor>
+	 * blockUnblockEmployee(@PathVariable(value = "id") int vendor_Id,
+	 * 
+	 * @Valid @RequestBody Vendor vendorDetails) throws Exception { Vendor vendor =
+	 * vendorDao.findById(vendor_Id) .orElseThrow(() -> new
+	 * Exception("Vendor not found for this id :: " + vendor_Id));
+	 * 
+	 * vendor.setActive(vendorDetails.getActive()); final Vendor updatedEmployee =
+	 * vendorDao.save(vendor); return ResponseEntity.ok(updatedEmployee); }
+	 */
 }

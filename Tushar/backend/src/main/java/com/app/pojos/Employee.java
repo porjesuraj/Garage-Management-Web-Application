@@ -46,7 +46,7 @@ public class Employee {
 	private String password;
 
 	@JsonProperty("active")
-	private int active;
+	private boolean active;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name=" employees",nullable = false)
@@ -58,8 +58,10 @@ public class Employee {
 		super();
 	}
 
-	public Employee(int employee_id, String firstName, String lastName, Date birthDate, String email,
-			String password) {
+	
+
+	public Employee( String firstName, String lastName, Date birthDate, String email, String password,
+			boolean active) {
 		super();
 		
 		this.firstName = firstName;
@@ -67,8 +69,10 @@ public class Employee {
 		this.birthDate = birthDate;
 		this.email = email;
 		this.password = password;
-		this.active = 1;
+		this.active = active;
 	}
+
+
 
 	/* =========================== Getters & Setters =========================== */
 	public int getEmployeeId() {
@@ -120,11 +124,17 @@ public class Employee {
 		this.password = password;
 	}
 
-	public int getActive() {
+	
+	
+	
+	
+	
+
+	public boolean isActive() {
 		return active;
 	}
 
-	public void setActive(int active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 
@@ -144,6 +154,13 @@ public class Employee {
 		this.employee_id = employee_id;
 	}
 
+
+
+	
+
+	
+	
+	/* ================================ toString =============================== */
 	@Override
 	public String toString() {
 		return "Employee [employee_id=" + employee_id + ", firstName=" + firstName + ", lastName=" + lastName
@@ -153,8 +170,6 @@ public class Employee {
 
 	
 	
-	/* ================================ toString =============================== */
-
 	
 
 }

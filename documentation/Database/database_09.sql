@@ -1,3 +1,23 @@
+
+
+create table product_services_list (
+	ps_id INTEGER NOT NULL AUTO_INCREMENT,
+	ps_name VARCHAR(120) NOT NULL,
+	price FLOAT NOT NULL,
+	PRIMARY KEY (`ps_id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+insert into services (ps_name,price) values("oil change",500);
+
+
+
+
+
+
+
+=====================================================
+
+
 create table services (
 	service_id INTEGER NOT NULL AUTO_INCREMENT,
 	serviceName VARCHAR(120) NOT NULL,

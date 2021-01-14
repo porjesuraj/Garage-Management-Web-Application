@@ -24,11 +24,7 @@ public class Employee {
 	private int employee_id;
 	
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name=" employees",nullable = false)
-	@JsonProperty("vendor")
-	private Vendor vendor;
-
+	
 	@Column(length = 45)
 	@JsonProperty("firstName")
 	private String firstName;
@@ -51,6 +47,11 @@ public class Employee {
 
 	@JsonProperty("active")
 	private int active;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name=" employees",nullable = false)
+	@JsonProperty("vendor")
+	private Vendor vendor;
 
 	/* ============================== Constructor ============================== */
 	public Employee() {

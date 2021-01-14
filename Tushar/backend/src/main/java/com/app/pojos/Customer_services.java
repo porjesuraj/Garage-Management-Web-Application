@@ -2,9 +2,14 @@ package com.app.pojos;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,10 +22,9 @@ public class Customer_services {
 	@JsonProperty("customer_services_id")
 	private int customer_services_id;
 
-	@JsonProperty("customer_id")
-	private int customer_id;
+	
 
-	@JsonProperty("totalAmount")
+	@JsonProperty("total_amount")
 	private double totalAmount;
 
 	@JsonProperty("tax")
@@ -28,27 +32,35 @@ public class Customer_services {
 
 	@Column(length = 15)
 	@JsonProperty("serviceStatus")
-	private String serviceStatus;
+	private StatusType serviceStatus;
 
-	@Column(length = 15)
-	@JsonProperty("paymentType")
-	private String paymentType;
+	@Enumerated(EnumType.STRING)
+	@Column(name="payment_type",length = 20)
+	@JsonProperty("payment_type")
+	private PaymentType paymentType;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="customer_id",nullable = false)
+	@JsonProperty("customer")
+	private Customer customer;
 	/* ============================== Constructor ============================== */
 	public Customer_services() {
 		super();
 	}
 
-	public Customer_services(int customer_services_id, int customer_id, double totalAmount, double tax,
-			String serviceStatus, String paymentType) {
+	
+
+	public Customer_services(int customer_services_id, double totalAmount, double tax, StatusType serviceStatus,
+			PaymentType paymentType) {
 		super();
 		this.customer_services_id = customer_services_id;
-		this.customer_id = customer_id;
 		this.totalAmount = totalAmount;
 		this.tax = tax;
 		this.serviceStatus = serviceStatus;
 		this.paymentType = paymentType;
 	}
+
+
 
 	/* =========================== Getters & Setters =========================== */
 
@@ -58,14 +70,6 @@ public class Customer_services {
 
 	public void setCustomer_services_id(int customer_services_id) {
 		this.customer_services_id = customer_services_id;
-	}
-
-	public int getCustomer_id() {
-		return customer_id;
-	}
-
-	public void setCustomer_id(int customer_id) {
-		this.customer_id = customer_id;
 	}
 
 	public double getTotalAmount() {
@@ -84,27 +88,54 @@ public class Customer_services {
 		this.tax = tax;
 	}
 
-	public String getServiceStatus() {
+	
+	
+	
+	
+	public StatusType getServiceStatus() {
 		return serviceStatus;
 	}
 
-	public void setServiceStatus(String serviceStatus) {
+
+
+	public void setServiceStatus(StatusType serviceStatus) {
 		this.serviceStatus = serviceStatus;
 	}
 
-	public String getPaymentType() {
+
+
+	public PaymentType getPaymentType() {
 		return paymentType;
 	}
 
-	public void setPaymentType(String paymentType) {
+
+
+	public void setPaymentType(PaymentType paymentType) {
 		this.paymentType = paymentType;
 	}
+
+
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+
+
+	
+	
 
 	/* ================================ toString =============================== */
 	@Override
 	public String toString() {
-		return "Customer_services [customer_services_id=" + customer_services_id + ", customer_id=" + customer_id + ", totalAmount=" + totalAmount
-				+ ", tax=" + tax + ", serviceStatus=" + serviceStatus + ", paymentType=" + paymentType + "]";
+		return "Customer_services [totalAmount=" + totalAmount + ", tax=" + tax + ", serviceStatus=" + serviceStatus
+				+ ", paymentType=" + paymentType + "]";
 	}
+
+	
 
 }

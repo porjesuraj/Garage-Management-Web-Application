@@ -49,7 +49,7 @@ public class Employee {
 	private boolean active;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name=" employees",nullable = false)
+	@JoinColumn(name=" employees")
 	@JsonProperty("vendor")
 	private Vendor vendor;
 

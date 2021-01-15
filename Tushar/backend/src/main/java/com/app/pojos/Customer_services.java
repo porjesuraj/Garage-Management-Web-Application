@@ -40,7 +40,7 @@ public class Customer_services {
 	private PaymentType paymentType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="customer_id",nullable = false)
+	@JoinColumn(name="customer_id")
 	@JsonProperty("customer")
 	private Customer customer;
 	/* ============================== Constructor ============================== */

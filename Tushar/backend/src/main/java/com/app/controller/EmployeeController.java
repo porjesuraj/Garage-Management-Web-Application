@@ -49,6 +49,41 @@ public class EmployeeController {
 	}
 	
 	// ---------------------------------------------------------------------------
+	// Get Profile
+	// ---------------------------------------------------------------------------
+	@GetMapping("/employee/{emp_id}")
+	public ResponseEntity<?> getProfile(@PathVariable(value = "emp_id") int emp_id) {
+		System.out.println("in get employee profile");
+
+		Employee emp = employeeDao.findById(emp_id).get();
+
+		if (emp.equals(null))
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		// non empty list
+		return new ResponseEntity<>(emp, HttpStatus.OK);
+	}
+
+
+	// ---------------------------------------------------------------------------
+	// Update Profile Profile
+	// ---------------------------------------------------------------------------
+	@PutMapping("/editEmployee/{id}")
+	public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "id") int employee_id,
+			@Valid @RequestBody Employee employeeDetails) throws Exception {
+
+		System.out.println("in update employee profile");
+
+		Employee employee = employeeDao.findById(employee_id)
+				.orElseThrow(() -> new Exception("Employee not found for this id :: " + employee_id));
+
+		employee.setEmail(employeeDetails.getEmail());
+		employee.setPassword(employeeDetails.getPassword());
+		final Employee updatedEmployee = employeeDao.save(employee);
+		return ResponseEntity.ok(updatedEmployee);
+	}
+
+
+	// ---------------------------------------------------------------------------
 	// List of all Feedback
 	// ---------------------------------------------------------------------------
 	@GetMapping("/Feedbacklist")

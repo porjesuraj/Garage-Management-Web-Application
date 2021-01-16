@@ -18,11 +18,11 @@ public class Admin {
 	private int admin_id;
 
 	@Column(length = 45)
-	@JsonProperty("firstName")
+	@JsonProperty("first_name")
 	private String firstName;
 
 	@Column(length = 45)
-	@JsonProperty("lastName")
+	@JsonProperty("last_name")
 	private String lastName;
 
 	@Column(length = 70)

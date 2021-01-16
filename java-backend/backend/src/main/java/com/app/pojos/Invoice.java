@@ -16,7 +16,7 @@ public class Invoice {
 	@JsonProperty("invoice_id")
 	private int invoice_id;
 
-	@JsonProperty("totalBill")
+	@JsonProperty("total_bill")
 	private double totalBill;
 
 	@JsonProperty("service_details_id")

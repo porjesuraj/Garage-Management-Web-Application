@@ -1,10 +1,15 @@
 package com.app.pojos;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,25 +43,32 @@ public class Vendor {
 	private String password;
 
 	@JsonProperty("active")
-	private int active;
+	private boolean active;
 
+	
+	
+	@OneToMany(mappedBy = "vendor",cascade = CascadeType.ALL,orphanRemoval = true)
+	private List<Employee> employees = new ArrayList<>(); 
 	/* ============================== Constructor ============================== */
 	public Vendor() {
 		super();
+		System.out.println("in vendor constructor");
 	}
 
-	public Vendor(int vendor_id,String name, String address, String contact, String email, String password) {
+	public Vendor(String name, String address, String contact, String email, String password, boolean active) {
 		super();
-		this.vendor_id = vendor_id;
 		this.name = name;
 		this.address = address;
 		this.contact = contact;
 		this.email = email;
 		this.password = password;
-		this.active = 1;
+		this.active = active;
 	}
+	
 
 	/* =========================== Getters & Setters =========================== */
+
+	
 
 	public int getVendor_Id() {
 		return vendor_id;
@@ -106,19 +118,49 @@ public class Vendor {
 		this.password = password;
 	}
 
-	public int getActive() {
+	
+	
+	
+	
+	
+	public boolean isActive() {
 		return active;
 	}
 
-	public void setActive(int active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 
-	/* ================================ toString ================================ */
-	@Override
-	public String toString() {
-		return "Vendor [vendor_id=" + vendor_id + ", name=" + name + ", address=" + address + ", contact=" + contact + ", email="
-				+ email + ", password=" + password + ", active=" + active + "]";
+	public List<Employee> getEmployees(){
+		return employees; 
 	}
+	
+	 public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
+	}
+	 
+	 
+	 public void addEmployee(Employee e)
+	 {
+		 employees.add(e); 
+		 e.setVendor(this);
+		 
+	 }
+	 
+	 public void removeEmployee(Employee e)
+	 {
+		 employees.remove(e); 
+		 
+		 e.setVendor(null);
+	 }
 
+	
+
+	/* ================================ toString ================================ */
+	 @Override
+		public String toString() {
+			return "Vendor [vendor_id=" + vendor_id + ", name=" + name + ", address=" + address + ", contact=" + contact
+					+ ", email=" + email + ", password=" + password + ", active=" + active + ", employees=" + employees
+					+ "]";
+		}
 }

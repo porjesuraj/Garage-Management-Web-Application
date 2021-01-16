@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,10 +22,9 @@ public class Employee {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty("employee_id")
 	private int employee_id;
-
-	@JsonProperty("vendor_id")
-	private int vendor_id;
-
+	
+	
+	
 	@Column(length = 45)
 	@JsonProperty("firstName")
 	private String firstName;
@@ -44,25 +46,33 @@ public class Employee {
 	private String password;
 
 	@JsonProperty("active")
-	private int active;
+	private boolean active;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name=" employees")
+	@JsonProperty("vendor")
+	private Vendor vendor;
 
 	/* ============================== Constructor ============================== */
 	public Employee() {
 		super();
 	}
 
-	public Employee(int employee_id, int vendor_id, String firstName, String lastName, Date birthDate, String email,
-			String password) {
+	
+
+	public Employee( String firstName, String lastName, Date birthDate, String email, String password,
+			boolean active) {
 		super();
-		this.employee_id = employee_id;
-		this.vendor_id = vendor_id;
+		
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthDate = birthDate;
 		this.email = email;
 		this.password = password;
-		this.active = 1;
+		this.active = active;
 	}
+
+
 
 	/* =========================== Getters & Setters =========================== */
 	public int getEmployeeId() {
@@ -73,13 +83,6 @@ public class Employee {
 		this.employee_id = employee_id;
 	}
 
-	public int getVendor_id() {
-		return vendor_id;
-	}
-
-	public void setVendor_id(int vendor_id) {
-		this.vendor_id = vendor_id;
-	}
 
 	public String getFirstName() {
 		return firstName;
@@ -121,21 +124,52 @@ public class Employee {
 		this.password = password;
 	}
 
-	public int getActive() {
+	
+	
+	
+	
+	
+
+	public boolean isActive() {
 		return active;
 	}
 
-	public void setActive(int active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 
-	/* ================================ toString =============================== */
+	public Vendor getVendor() {
+		return vendor;
+	}
 
+	public void setVendor(Vendor vendor) {
+		this.vendor = vendor;
+	}
+
+	public int getEmployee_id() {
+		return employee_id;
+	}
+
+	public void setEmployee_id(int employee_id) {
+		this.employee_id = employee_id;
+	}
+
+
+
+	
+
+	
+	
+	/* ================================ toString =============================== */
 	@Override
 	public String toString() {
-		return "Employee [employee_id=" + employee_id + ", vendor_id=" + vendor_id + ", firstName=" + firstName + ", lastName=" + lastName
+		return "Employee [employee_id=" + employee_id + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", birthDate=" + birthDate + ", email=" + email + ", password=" + password + ", active=" + active
 				+ "]";
 	}
+
+	
+	
+	
 
 }

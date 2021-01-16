@@ -23,11 +23,8 @@ public class Service_details {
 	@JsonProperty("customerServices_id")
 	private int customerServices_id;
 
-	@JsonProperty("service_id")
-	private int service_id;
-
-	@JsonProperty("product_id")
-	private int product_id;
+	@JsonProperty("ps_id")
+	private int ps_id;
 
 	@JsonProperty("price")
 	private double price;
@@ -43,18 +40,7 @@ public class Service_details {
 		super();
 	}
 
-	public Service_details(int service_details_id, int customer_id, int customerServices_id, int service_id,
-			int product_id, double price, int quantity, double totalAmount) {
-		super();
-		this.service_details_id = service_details_id;
-		this.customer_id = customer_id;
-		this.customerServices_id = customerServices_id;
-		this.service_id = service_id;
-		this.product_id = product_id;
-		this.price = price;
-		this.quantity = quantity;
-		this.totalAmount = totalAmount;
-	}
+	
 
 	/* =========================== Getters & Setters =========================== */
 	public int getService_details_id() {
@@ -81,21 +67,7 @@ public class Service_details {
 		this.customerServices_id = customerServices_id;
 	}
 
-	public int getService_id() {
-		return service_id;
-	}
-
-	public void setService_id(int service_id) {
-		this.service_id = service_id;
-	}
-
-	public int getProduct_id() {
-		return product_id;
-	}
-
-	public void setProduct_id(int product_id) {
-		this.product_id = product_id;
-	}
+	
 
 	public double getPrice() {
 		return price;
@@ -122,11 +94,6 @@ public class Service_details {
 	}
 
 	/* ================================ toString =============================== */
-	@Override
-	public String toString() {
-		return "Service_details [service_details_id=" + service_details_id + ", customer_id=" + customer_id
-				+ ", customerServices_id=" + customerServices_id + ", service_id=" + service_id + ", product_id="
-				+ product_id + ", price=" + price + ", quantity=" + quantity + ", totalAmount=" + totalAmount + "]";
-	}
+	
 
 }

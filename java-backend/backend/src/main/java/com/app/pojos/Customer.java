@@ -1,12 +1,16 @@
 package com.app.pojos;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,19 +24,19 @@ public class Customer {
 	private int customer_id;
 
 	@Column(length = 45)
-	@JsonProperty("firstName")
+	@JsonProperty("first_name")
 	private String firstName;
 
 	@Column(length = 45)
-	@JsonProperty("middleName")
+	@JsonProperty("middle_name")
 	private String middleName;
 
 	@Column(length = 45)
-	@JsonProperty("lastName")
+	@JsonProperty("last_name")
 	private String lastName;
 
 	@Column(length = 200)
-	@JsonProperty("birthDate")
+	@JsonProperty("birth_date")
 	private Date birthDate;
 
 	@Column(length = 20)
@@ -52,18 +56,23 @@ public class Customer {
 	private String password;
 
 	@JsonProperty("active")
-	private int active;
+	private boolean active;
 
+	@OneToMany(mappedBy = "customer",cascade = CascadeType.ALL,orphanRemoval = true)
+	private List<Customer_services> customer_services=new ArrayList<>();
+	
+	
 	/* ============================== Constructor ============================== */
 
 	public Customer() {
 		super();
 	}
 
-	public Customer(int customer_id, String firstName, String middleName, String lastName, Date birthDate, String contact,
-			String address, String email, String password, int active) {
+ 
+	public Customer( String firstName, String middleName, String lastName, Date birthDate,
+			String contact, String address, String email, String password, boolean active) {
 		super();
-		this.customer_id = customer_id;
+		
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
@@ -76,6 +85,10 @@ public class Customer {
 	}
 
 	/* =========================== Getters & Setters =========================== */
+
+
+
+
 
 	public int getCustomerId() {
 		return customer_id;
@@ -149,21 +162,52 @@ public class Customer {
 		this.password = password;
 	}
 
-	public int getActive() {
+	
+	
+	public boolean isActive() {
 		return active;
 	}
 
-	public void setActive(int active) {
+
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 
+
+	public List<Customer_services> getCustomer_services() {
+		return customer_services;
+	}
+
+	public void setCustomer_services(List<Customer_services> customer_services) {
+		this.customer_services = customer_services;
+	}
+	
+	//add helper methods : 
+	public void addCustomerService(Customer_services cs)
+	{
+	     customer_services.add(cs); 
+		cs.setCustomer(this);
+	}
+	public void removeCustomerSerivice(Customer_services cs)
+	{
+		customer_services.remove(cs); 
+		cs.setCustomer(null);
+		
+	}
+
+
+	
+
+	
 	/* ================================ toString =============================== */
 
 	@Override
 	public String toString() {
-		return "Customer [customer_id=" + customer_id + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName="
-				+ lastName + ", birthDate=" + birthDate + ", contact=" + contact + ", address=" + address + ", email="
-				+ email + ", password=" + password + ", active=" + active + "]";
+		return "Customer [firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName
+				+ ", birthDate=" + birthDate + ", contact=" + contact + ", address=" + address + ", email=" + email
+				+ ", password=" + password + ", active=" + active + "]";
 	}
+
+	
 
 }

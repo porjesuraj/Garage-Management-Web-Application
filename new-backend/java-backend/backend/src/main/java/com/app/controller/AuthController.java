@@ -1,0 +1,145 @@
+package com.app.controller;
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.app.customException.UserDeactivateException;
+import com.app.model.LoginCredentials;
+import com.app.pojos.Admin;
+
+import com.app.pojos.User;
+import com.app.service.AdminService;
+import com.app.service.UserService;
+import com.app.utils.JwtTokenUtil;
+
+@CrossOrigin
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
+	AdminService adminService;
+	
+	
+	@Autowired
+	private UserService userService;
+	
+	
+	
+	
+
+	public AuthController() {
+		System.out.println("In Constructor of " + this.getClass().getName());
+	}
+
+	@PostMapping("/signin")
+	public ResponseEntity<?> userLogin(@RequestBody LoginCredentials loginCredentials)  throws AuthenticationException {
+
+		System.out.println("before findbyEmail" + loginCredentials.getEmail());
+		
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginCredentials.getEmail(), loginCredentials.getPassword()));
+		
+		System.out.println("before findbyEmail" + loginCredentials.getEmail());
+		
+		
+		User foundedUser = userService.findByEmail(loginCredentials.getEmail()); 
+		
+		System.out.println("user details" + foundedUser.toString());
+		
+	//	User foundedUser = userService.findByRegNo(String.valueOf(loginCredentials.getRegNo()));
+		
+		if(foundedUser.getActive() == 0)
+			throw new UserDeactivateException("User is Deactivated");
+		
+		System.out.println(foundedUser);
+
+		Map<String, String> claims = new HashMap<String, String>();
+		
+	    claims.put("email", foundedUser.getEmail());
+		claims.put("role", foundedUser.getRole());
+		
+		
+		
+		final String token = jwtTokenUtil.generateToken(claims);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("status", "success");
+		map.put("token", token);
+		map.put("role", foundedUser.getRole());
+
+		ResponseEntity<?> resp = new ResponseEntity<>(map, HttpStatus.OK);
+		return resp;
+	}
+	
+	@PostMapping("/admin/signin")
+	public ResponseEntity<?> adminLogin(@RequestBody Admin admin)  throws AuthenticationException {
+
+		System.out.println(admin.getEmail());
+		System.out.println(admin.getPassword());
+
+		authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(admin.getEmail(), admin.getPassword()));
+		
+		//Admin foundedAdmin = adminService.findByregNo(admin.getRegNo());
+		
+		Admin foundedAdmin = adminService.findById(admin.getId());
+		System.out.println(foundedAdmin);
+
+		Map<String, String> claims = new HashMap<String, String>();
+		claims.put("email", foundedAdmin.getEmail());
+		claims.put("role", "ADMIN");
+		
+		final String token = jwtTokenUtil.generateToken(claims);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("status", "success");
+		map.put("token", token);
+		map.put("role", "ADMIN");
+
+		ResponseEntity<?> resp = new ResponseEntity<>(map, HttpStatus.OK);
+		return resp;
+	}
+	
+	
+	@PostMapping("/admin/signup")
+	public ResponseEntity<?> adminSignup(@RequestBody Admin newAdmin)  throws AuthenticationException {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		System.out.println("New Admin : "+newAdmin);
+		
+		if (userService
+				.addUser(new User(newAdmin.getEmail(), newAdmin.getPassword(),"ADMIN",1)) != null && adminService.addAdmin(newAdmin) != null) {
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} else {
+			map.put("status", "error");
+			map.put("error", "Can't Add Admin");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return resp;
+	}
+	
+}

@@ -109,7 +109,7 @@ For scanning entities :
 10. Spring Boot automatically configures everything that is required for our application. We don't have to use XML or annotation based or Java configuration anymore.
 11. spring boot gives us a lot of health checks of our application for free through the spring boot actuators
 
-### *why  Angular
+### why  Angular
 * The core features of AngularJS are as follows −
 1. Data-binding − It is the automatic synchronization of data between model and view components.
 
@@ -180,7 +180,7 @@ For scanning entities :
 
 ## 6. Explain n-tier architecture of your project? 
 1. 3-Tier Architecture
-By looking at the below diagram, you can easily identify that 3-tier architecture has three different layers.
+ + By looking at the below diagram, you can easily identify that 3-tier architecture has     three different layers.
 + 1. Presentation layer
 + 2. Business Logic layer
 + 3. Database layer
@@ -198,7 +198,7 @@ By looking at the below diagram, you can easily identify that 3-tier architectur
 3. AWS 
 
 ## 8. What was your role in your project and explain what you did in it? 
-1. 
+
 
 ## 9. Which software development methodology you used in project ? Expain its process? 
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ import com.app.dao.CustomerDao;
 import com.app.dao.FeedbackDao;
 import com.app.pojos.Customer;
 import com.app.pojos.Feedback;
-
+@CrossOrigin
 @RestController // @Controller + @ResponseBody
 @RequestMapping("/customer")
 public class CustomerController {
@@ -35,27 +36,25 @@ public class CustomerController {
 	// ---------------------------------------------------------------------------
 	// Signup Customer
 	// ---------------------------------------------------------------------------
-	@PostMapping("/signup")
-	public Customer createCustomer(@Valid @RequestBody Customer customer) {
-		return customerDao.save(customer);
-	}
+	/*
+	 * @PostMapping("/signup") public Customer createCustomer(@Valid @RequestBody
+	 * Customer customer) { return customerDao.save(customer); }
+	 */
 
 	// ---------------------------------------------------------------------------
 	// Signin vendor
 	// ---------------------------------------------------------------------------
 
-	@PostMapping("/signin")
-	public Customer authenticateVendor(@Valid @RequestBody Customer customer) {
-
-		// System.out.println(email + password);
-		Customer v = customerDao.findByEmailAndPassword(customer.getEmail(), customer.getPassword());
-
-		if (v != null)
-			return v;
-		else
-			return null;
-	}
-	
+	/*
+	 * @PostMapping("/signin") public Customer
+	 * authenticateVendor(@Valid @RequestBody Customer customer) {
+	 * 
+	 * // System.out.println(email + password); Customer v =
+	 * customerDao.findByEmailAndPassword(customer.getEmail(),
+	 * customer.getPassword());
+	 * 
+	 * if (v != null) return v; else return null; }
+	 */
 	// ---------------------------------------------------------------------------
 	// Add Feedback
 	// ---------------------------------------------------------------------------

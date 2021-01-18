@@ -9,6 +9,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dao.*;
 import com.app.pojos.*;
+import com.app.service.EmployeeService;
+import com.app.service.UserService;
+import com.app.service.VendorService;
 
+@CrossOrigin
 @RestController // @Controller + @ResponseBody
 @RequestMapping("/vendor")
 public class VendorController {
@@ -36,6 +42,16 @@ public class VendorController {
 
 	@Autowired
 	private FeedbackDao feedbackDao;
+	
+	
+	
+	@Autowired
+	private UserService userService; 
+	
+	
+	@Autowired
+	private EmployeeService employeeService; 
+	
 
 	public VendorController() {
 		System.out.println("in ctor of " + getClass().getName());
@@ -79,7 +95,7 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 	// List of all Employee
 	// ---------------------------------------------------------------------------
-	@GetMapping("/Employeelist")
+	@GetMapping("/employeeList")
 	public ResponseEntity<?> fetchAllEmployees() {
 		System.out.println("in fetch all vendor");
 
@@ -94,9 +110,30 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 	// Add Employee
 	// ---------------------------------------------------------------------------
+	/*
+	 * @PostMapping("/addEmployee") public Employee
+	 * createEmployee(@Valid @RequestBody Employee employee) { return
+	 * employeeDao.save(employee); }
+	 */
+	
 	@PostMapping("/addEmployee")
-	public Employee createEmployee(@Valid @RequestBody Employee employee) {
-		return employeeDao.save(employee);
+	public ResponseEntity<?> EMployeeSignup(@RequestBody  Employee newEmployee)  throws AuthenticationException {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		System.out.println("New Employee : "+ newEmployee);
+		
+		if (userService
+				.addUser(new User(newEmployee.getEmail(), newEmployee.getPassword(),"EMPLOYEE",1)) != null && employeeService.addEmployee(newEmployee) != null) {
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} else {
+			map.put("status", "error");
+			map.put("error", "Can't Add Employee");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return resp;
 	}
 
 	// ---------------------------------------------------------------------------

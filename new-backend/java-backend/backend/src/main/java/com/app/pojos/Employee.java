@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Past;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -31,6 +34,8 @@ public class Employee {
 
 
 	@Column(length = 200)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Past
 	@JsonProperty("birth_date")
 	private LocalDate birthDate;
 

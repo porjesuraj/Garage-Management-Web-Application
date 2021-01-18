@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,10 @@ import com.app.dao.OfferDao;
 import com.app.dao.VendorDao;
 import com.app.pojos.Admin;
 import com.app.pojos.Offer;
+import com.app.pojos.User;
 import com.app.pojos.Vendor;
+import com.app.service.UserService;
+import com.app.service.VendorService;
 @CrossOrigin
 @RestController // @Controller + @ResponseBody
 @RequestMapping("/admin")
@@ -33,8 +37,17 @@ public class AdminController {
 	@Autowired
 	private VendorDao vendorDao;
 
+	
+	@Autowired
+	private VendorService vendorService; 
+	
+	
 	@Autowired
 	private AdminDao adminDao;
+	
+	
+	@Autowired
+	private UserService userService; 
 
 	@Autowired
 	private OfferDao offerDao;
@@ -61,10 +74,10 @@ public class AdminController {
 	// ---------------------------------------------------------------------------
 	// Signup admin
 	// ---------------------------------------------------------------------------
-	@PostMapping("/signup")
-	public Admin createAdmin(@Valid @RequestBody Admin admin) {
-		return adminDao.save(admin);
-	}
+	/*
+	 * @PostMapping("/signup") public Admin createAdmin(@Valid @RequestBody Admin
+	 * admin) { return adminDao.save(admin); }
+	 */
 	
 	// ---------------------------------------------------------------------------
 	// Signin Admin
@@ -102,11 +115,25 @@ public class AdminController {
 	// ---------------------------------------------------------------------------
 	// Add vendor
 	// ---------------------------------------------------------------------------
-	@PostMapping("/addvendor")
-	public Vendor createVendor(@Valid @RequestBody Vendor vendor) {
-		return vendorDao.save(vendor);
-	}
+	@PostMapping("/vendor/signup")
+	public ResponseEntity<?> VendorSignup(@RequestBody Vendor newVendor)  throws AuthenticationException {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
 
+		System.out.println("New Vendor : "+ newVendor);
+		
+		if (userService
+				.addUser(new User(newVendor.getEmail(), newVendor.getPassword(),"VENDOR",1)) != null && vendorService.addVendor(newVendor) != null) {
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} else {
+			map.put("status", "error");
+			map.put("error", "Can't Add Vendor");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return resp;
+	}
 	// ---------------------------------------------------------------------------
 	// Delete vendor
 	// ---------------------------------------------------------------------------

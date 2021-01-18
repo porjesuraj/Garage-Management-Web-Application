@@ -30,6 +30,7 @@ public class Customer_services {
 	@JsonProperty("tax")
 	private double tax;
 
+	@Enumerated(EnumType.STRING)
 	@Column(length = 15)
 	@JsonProperty("service_status")
 	private StatusType serviceStatus;

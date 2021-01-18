@@ -33,7 +33,7 @@ public class Vendor {
 	@JsonProperty("address")
 	private String address;
 
-	@Column(length = 20)
+	@Column(length = 30)
 	@JsonProperty("contact")
 	private String contact;
 

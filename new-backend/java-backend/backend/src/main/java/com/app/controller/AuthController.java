@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.customException.UserDeactivateException;
 import com.app.model.LoginCredentials;
 import com.app.pojos.Admin;
-
+import com.app.pojos.Customer;
 import com.app.pojos.User;
+import com.app.pojos.Vendor;
 import com.app.service.AdminService;
+import com.app.service.CustomerService;
 import com.app.service.UserService;
+import com.app.service.VendorService;
 import com.app.utils.JwtTokenUtil;
 
 @CrossOrigin
@@ -39,9 +42,15 @@ public class AuthController {
 	@Autowired
 	AdminService adminService;
 	
+	@Autowired
+	VendorService vendorService;
+	
+	@Autowired
+	CustomerService customerService; 
 	
 	@Autowired
 	private UserService userService;
+	
 	
 	
 	
@@ -91,35 +100,7 @@ public class AuthController {
 		return resp;
 	}
 	
-	@PostMapping("/admin/signin")
-	public ResponseEntity<?> adminLogin(@RequestBody Admin admin)  throws AuthenticationException {
-
-		System.out.println(admin.getEmail());
-		System.out.println(admin.getPassword());
-
-		authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(admin.getEmail(), admin.getPassword()));
-		
-		//Admin foundedAdmin = adminService.findByregNo(admin.getRegNo());
-		
-		Admin foundedAdmin = adminService.findById(admin.getId());
-		System.out.println(foundedAdmin);
-
-		Map<String, String> claims = new HashMap<String, String>();
-		claims.put("email", foundedAdmin.getEmail());
-		claims.put("role", "ADMIN");
-		
-		final String token = jwtTokenUtil.generateToken(claims);
-
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put("status", "success");
-		map.put("token", token);
-		map.put("role", "ADMIN");
-
-		ResponseEntity<?> resp = new ResponseEntity<>(map, HttpStatus.OK);
-		return resp;
-	}
+	
 	
 	
 	@PostMapping("/admin/signup")
@@ -142,4 +123,23 @@ public class AuthController {
 		return resp;
 	}
 	
+	@PostMapping("/customer/signup")
+	public ResponseEntity<?> customerSignup(@RequestBody Customer newCustomer)  throws AuthenticationException {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		System.out.println("New Customer : "+ newCustomer);
+		
+		if (userService
+				.addUser(new User(newCustomer.getEmail(), newCustomer.getPassword(),"CUSTOMER",1)) != null && customerService.addCustomer(newCustomer) != null) {
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} else {
+			map.put("status", "error");
+			map.put("error", "Can't Add Customer");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return resp;
+	}
 }

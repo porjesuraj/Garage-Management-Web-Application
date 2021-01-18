@@ -3,6 +3,7 @@ package com.app.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.customException.RecordNotFoundException;
 import com.app.dao.AdminDao;
 import com.app.dao.OfferDao;
 import com.app.dao.VendorDao;
@@ -27,6 +29,7 @@ import com.app.pojos.Admin;
 import com.app.pojos.Offer;
 import com.app.pojos.User;
 import com.app.pojos.Vendor;
+import com.app.service.AdminService;
 import com.app.service.UserService;
 import com.app.service.VendorService;
 @CrossOrigin
@@ -45,6 +48,8 @@ public class AdminController {
 	@Autowired
 	private AdminDao adminDao;
 	
+	@Autowired 
+	private AdminService adminService; 
 	
 	@Autowired
 	private UserService userService; 
@@ -61,56 +66,52 @@ public class AdminController {
 	// ---------------------------------------------------------------------------
 	@GetMapping("/list")
 	public ResponseEntity<?> fetchAllAdmins() {
-		System.out.println("in fetch all admins");
-
-		List<Admin> admins = adminDao.findAll();
-
-		if (admins.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		// non empty list
-		return new ResponseEntity<>(admins, HttpStatus.OK);
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();	
+		System.out.println("in fetch all admins");	
+		try {	
+			List<Admin> admins = adminDao.findAll();	
+			map.put("status", "success");
+			map.put("data", admins);
+			resp = new ResponseEntity<>(map, HttpStatus.OK);					
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", e.getMessage());
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		
+		return resp;
 	}
 
-	// ---------------------------------------------------------------------------
-	// Signup admin
-	// ---------------------------------------------------------------------------
-	/*
-	 * @PostMapping("/signup") public Admin createAdmin(@Valid @RequestBody Admin
-	 * admin) { return adminDao.save(admin); }
-	 */
-	
-	// ---------------------------------------------------------------------------
-	// Signin Admin
-	// ---------------------------------------------------------------------------
-
-	/*
-	 * @PostMapping("/signin") public Admin authenticateVendor(@Valid @RequestBody
-	 * Admin admin) {
-	 * 
-	 * //System.out.println(email + password); Op Admin v =
-	 * adminDao.findByEmailAndPassword(admin.getEmail(),admin.getPassword());
-	 * 
-	 * if (v != null) return v; else return null; }
-	 */
-
-	// --------------------------------------------------------------------------------------------------------------
-	// *************************Vendor-Management****************************************************************
-	// ---------------------------------------------------------------------------------------------------------------
 
 	// ---------------------------------------------------------------------------
 	// List of all vendors
 	// ---------------------------------------------------------------------------
 	@GetMapping("/vendorlist")
-	public ResponseEntity<?> fetchAllVendors() {
-		System.out.println("in fetch all vendor");
+	public ResponseEntity<?> fetchAllVendors() 		
+	{
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();	
+		System.out.println("in fetch all vendor");	
+		try {	
+			List<Vendor> vendors = vendorDao.findAll();
 
-		List<Vendor> vendors = vendorDao.findAll();
-
-		if (vendors.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		// non empty list
-		return new ResponseEntity<>(vendors, HttpStatus.OK);
+			map.put("status", "success");
+			map.put("data", vendors);
+			resp = new ResponseEntity<>(map, HttpStatus.OK);					
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", e.getMessage());
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+		return resp;
+		
+		
 	}
+	
 
 	// ---------------------------------------------------------------------------
 	// Add vendor
@@ -138,32 +139,72 @@ public class AdminController {
 	// Delete vendor
 	// ---------------------------------------------------------------------------
 
-	@DeleteMapping("/deletevendor/{id}")
-	public Map<String, Boolean> deleteVendor(@PathVariable(value = "id") int vendor_Id) throws Exception {
-		Vendor vendor = vendorDao.findById(vendor_Id)
-				.orElseThrow(() -> new Exception("Vendor not found for this id :: " + vendor_Id));
-
-		vendorDao.delete(vendor);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
+	/*
+	 * @DeleteMapping("/deletevendor/{id}") public Map<String, Boolean>
+	 * deleteVendor(@PathVariable(value = "id") int vendor_Id) throws Exception {
+	 * Vendor vendor = vendorDao.findById(vendor_Id) .orElseThrow(() -> new
+	 * Exception("Vendor not found for this id :: " + vendor_Id));
+	 * 
+	 * vendorDao.delete(vendor); Map<String, Boolean> response = new HashMap<>();
+	 * response.put("deleted", Boolean.TRUE); return response; }
+	 */
+	
+	@DeleteMapping("/deleteVendor/{id}")
+	public ResponseEntity<?> deleteVendor(@PathVariable int id) {
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("in delete vendor with id :  " + id);
+		try {
+			vendorService.deleteVendor(id);
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", "Can't delete Vendor");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return resp;
+		
 	}
+	
+	
 
 	// ---------------------------------------------------------------------------
 	// Edit vendor
 	// ---------------------------------------------------------------------------
 
 	@PutMapping("/editVendor/{id}")
-	public ResponseEntity<Vendor> updateVendor(@PathVariable(value = "id") int vendor_Id,
-			@Valid @RequestBody Vendor vendorDetails) throws Exception {
-		Vendor vendor = vendorDao.findById(vendor_Id)
-				.orElseThrow(() -> new Exception("Vendor not found for this id :: " + vendor_Id));
+	public ResponseEntity<?> updateVendor(@PathVariable(value = "id") int vendor_Id,
+			@Valid @RequestBody Vendor vendorDetails) throws RecordNotFoundException {
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Vendor vendor = null;
+		vendor = vendorDao.findById(vendor_Id)
+				.orElseThrow(() -> new RecordNotFoundException("Vendor not found for this id :: " + vendor_Id));
 
-		vendor.setEmail(vendorDetails.getEmail());
-		vendor.setName(vendorDetails.getName());
-		final Vendor updatedVendor = vendorDao.save(vendor);
-		return ResponseEntity.ok(updatedVendor);
+		if(vendor != null)
+		{
+			vendor.setEmail(vendorDetails.getEmail());
+			vendor.setName(vendorDetails.getName());
+			final Vendor updatedVendor = vendorDao.save(vendor);
+			
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "Student Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		
+		return resp;
+		
 	}
+	
+	
+	
 
 	// ---------------------------------------------------------------------------
 	// Block/Unblock vendor
@@ -187,8 +228,20 @@ public class AdminController {
 	// Create Offer
 	// ---------------------------------------------------------------------------
 	@PostMapping("/addOffer")
-	public Offer createOffer(@Valid @RequestBody Offer offer) {
-		return offerDao.save(offer);
+	public ResponseEntity<?> createOffer(@Valid @RequestBody Offer offer) {
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		System.out.println("New Offer : "+ offer);
+		if(offerDao.save(offer) != null)
+		{	map.put("status", "success");
+		resp = new ResponseEntity<>(map, HttpStatus.OK);
+	} else {
+		map.put("status", "error");
+		map.put("error", "Can't Add Offer");
+		resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	return resp;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -196,14 +249,26 @@ public class AdminController {
 	// ---------------------------------------------------------------------------
 	@GetMapping("/offerlist")
 	public ResponseEntity<?> fetchAllOffers() {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
 		System.out.println("in fetch all offer");
 
 		List<Offer> offers = offerDao.findAll();
 
 		if (offers.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		// non empty list
-		return new ResponseEntity<>(offers, HttpStatus.OK);
+		{	map.put("status", "error");
+		map.put("error", "no offer found");
+			resp = new ResponseEntity<>(map,HttpStatus.NO_CONTENT);
+		}// non empty list
+		else 
+		{
+			map.put("status", "success");
+			map.put("data", offers); 
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+			
+		}
+		return resp;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -211,16 +276,35 @@ public class AdminController {
 	// ---------------------------------------------------------------------------
 
 	@PutMapping("/editOffer/{id}")
-	public ResponseEntity<Offer> updateOffer(@PathVariable(value = "id") int offer_id,
+	public ResponseEntity<?> updateOffer(@PathVariable(value = "id") int offer_id,
 			@Valid @RequestBody Offer offerDetails) throws Exception {
-		Offer offer = offerDao.findById(offer_id)
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("in edit offer");
+		
+		
+		Offer offer = null; 
+		offer = offerDao.findById(offer_id)
 				.orElseThrow(() -> new Exception("Vendor not found for this id :: " + offer_id));
 
-		offer.setOffer_name(offerDetails.getOffer_name());
-		offer.setOffer_discount(offerDetails.getOffer_discount());
-		offer.setMin_value(offerDetails.getMin_value());
-		final Offer updatedOffer = offerDao.save(offer);
-		return ResponseEntity.ok(updatedOffer);
+		
+		if(offer != null)
+		{
+			offer.setOffer_name(offerDetails.getOffer_name());
+			offer.setOffer_discount(offerDetails.getOffer_discount());
+			offer.setMin_value(offerDetails.getMin_value());
+			final Offer updatedOffer = offerDao.save(offer);
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "Student Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	
+		return resp;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -228,13 +312,28 @@ public class AdminController {
 	// ---------------------------------------------------------------------------
 
 	@DeleteMapping("/deleteOffer/{id}")
-	public Map<String, Boolean> deleteOffer(@PathVariable(value = "id") int offer_id) throws Exception {
-		Offer offer = offerDao.findById(offer_id)
+	public ResponseEntity<?>  deleteOffer(@PathVariable(value = "id") int offer_id) throws Exception {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("in delete offer");
+		
+		Offer offer = null; 
+		offer = offerDao.findById(offer_id)
 				.orElseThrow(() -> new Exception("Offer not found for this id :: " + offer_id));
 
-		offerDao.delete(offer);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
+		if(offer != null)
+		{
+			offerDao.delete(offer);
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "offer Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.NO_CONTENT);
+		}		
+		
+		return resp;
 	}
 }

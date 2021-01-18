@@ -9,7 +9,7 @@ import com.app.dao.AdminDao;
 import com.app.pojos.Admin;
 
 @Service
-public class AdminService {
+public class AdminService implements IAdminService {
 
 	@Autowired
 	AdminDao adminDao;
@@ -18,6 +18,7 @@ public class AdminService {
 		System.out.println("In Constructor of " + this.getClass().getName());
 	}
 
+	@Override
 	public Admin findById(int id) {
 		Optional<Admin> admin = adminDao.findById(id);
 		if (admin.isPresent())
@@ -25,6 +26,7 @@ public class AdminService {
 		return null;
 	}
 	
+	@Override
 	public Admin addAdmin(Admin newAdmin) {
 		return adminDao.save(newAdmin);
 	}

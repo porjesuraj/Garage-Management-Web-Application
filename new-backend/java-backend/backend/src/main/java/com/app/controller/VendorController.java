@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dao.*;
 import com.app.pojos.*;
+import com.app.service.CustomerService;
 import com.app.service.EmployeeService;
 import com.app.service.UserService;
 import com.app.service.VendorService;
@@ -52,42 +53,14 @@ public class VendorController {
 	@Autowired
 	private EmployeeService employeeService; 
 	
+	@Autowired
+	private CustomerService customerService; 
 
 	public VendorController() {
 		System.out.println("in ctor of " + getClass().getName());
 	}
 
-	// ---------------------------------------------------------------------------
-	// Signin vendor
-	// ---------------------------------------------------------------------------
-
-	@PostMapping("/signin")
-	public Vendor authenticateVendor(@Valid @RequestBody Vendor vendor) {
-
-		//System.out.println(email + password);
-		Vendor v = vendorDao.findByEmailAndPassword(vendor.getEmail(),vendor.getPassword());
-
-		if (v != null)
-			return v;
-		else
-			return null;
-	}
-
-	// ---------------------------------------------------------------------------
-	// List of all vendor
-	// ---------------------------------------------------------------------------
-	@GetMapping("/list")
-	public ResponseEntity<?> fetchAllVendors() {
-		System.out.println("in fetch all vendor");
-
-		List<Vendor> vendors = vendorDao.findAll();
-
-		if (vendors.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		// non empty list
-		return new ResponseEntity<>(vendors, HttpStatus.OK);
-	}
-
+	
 	// --------------------------------------------------------------------------------------------------------------
 	// ******************************Employee-Management***********************************************************
 	// ---------------------------------------------------------------------------------------------------------------
@@ -97,14 +70,23 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 	@GetMapping("/employeeList")
 	public ResponseEntity<?> fetchAllEmployees() {
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		System.out.println("in fetch all vendor");
 
-		List<Employee> employees = employeeDao.findAll();
-
-		if (employees.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		// non empty list
-		return new ResponseEntity<>(employees, HttpStatus.OK);
+		try {
+			List<Employee> employees = employeeDao.findAll();
+			map.put("status", "success");
+			map.put("data", employees);
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			resp = new ResponseEntity<>(map, HttpStatus.NO_CONTENT);
+		}
+		
+		return resp; 
 	}
 
 	// ---------------------------------------------------------------------------
@@ -141,14 +123,29 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 
 	@DeleteMapping("/deleteEmployee/{id}")
-	public Map<String, Boolean> deleteEmployee(@PathVariable(value = "id") int employee_id) throws Exception {
+	public ResponseEntity<?> deleteEmployee(@PathVariable(value = "id") int employee_id) throws Exception {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		Employee employee = employeeDao.findById(employee_id)
 				.orElseThrow(() -> new Exception("Employee not found for this id :: " + employee_id));
-
-		employeeDao.delete(employee);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
+   
+		try {
+			
+			userService.deleteUser(employee.getEmail());
+			employeeDao.delete(employee);
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", "Employee Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.NO_CONTENT);
+		}
+			
+		return resp;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -156,17 +153,93 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 
 	@PutMapping("/editEmployee/{id}")
-	public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "id") int employee_id,
+	public ResponseEntity<?> updateEmployee(@PathVariable(value = "id") int employee_id,
 			@Valid @RequestBody Employee employeeDetails) throws Exception {
-		Employee employee = employeeDao.findById(employee_id)
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		
+		Employee employee = null;  
+		employee = employeeDao.findById(employee_id)
 				.orElseThrow(() -> new Exception("Employee not found for this id :: " + employee_id));
-
-		employee.setEmail(employeeDetails.getEmail());
-		employee.setPassword(employeeDetails.getPassword());
-		final Employee updatedEmployee = employeeDao.save(employee);
-		return ResponseEntity.ok(updatedEmployee);
+		
+		if(employee != null)
+		{
+			employee.setEmail(employeeDetails.getEmail());
+			employee.setPassword(employeeDetails.getPassword());
+			final Employee updatedEmployee = employeeDao.save(employee);
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "Employee Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return resp; 
+		
+		
+		
 	}
+	
+	
+	// ---------------------------------------------------------------------------
+	// Block/Unblock employee
+	// ---------------------------------------------------------------------------
+	
+	  @PutMapping("/blockEmployee/{id}") 
+	  public ResponseEntity<?> BlockEmployee(@PathVariable(value = "id") int employee_Id) throws Exception { 
+		  Employee employee =   employeeService.findById(employee_Id); 
+		  ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+		  if(userService.deactivateUser(employee.getEmail()) != null)
+		  {
+				map.put("status", "success");
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			  
+		  }else
+		  {
+			  map.put("status", "error");
+				map.put("error", "Employee Not Found");
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			  
+		  }
+		  return resp; 
+	  
+	  
+	  
+	  }
+	  
+	   
+	  @PutMapping("/unblockEmployee/{id}") 
+	  public ResponseEntity<?> UnblockEmployee(@PathVariable(value = "id") int employee_Id) throws Exception { 
+		  Employee employee =   employeeService.findById(employee_Id); 
+		  ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+		  if(userService.activateUser(employee.getEmail()) != null)
+		  {
+				map.put("status", "success");
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			  
+		  }else
+		  {
+			  map.put("status", "error");
+				map.put("error", "Employee Not Found");
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			  
+		  }
+		  return resp; 
+	  
+	  
+	  
+	  }
+	  
+	  
+	 
 
+	// --------------------------------------------------------------------------------------------------------------
 	// --------------------------------------------------------------------------------------------------------------
 	// *************************Customer-Management****************************************************************
 	// ---------------------------------------------------------------------------------------------------------------
@@ -175,56 +248,187 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 	@GetMapping("/Customerlist")
 	public ResponseEntity<?> fetchAllCustomers() {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		System.out.println("in fetch all Customer");
 
-		List<Customer> customers = customerDao.findAll();
-
-		if (customers.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		// non empty list
-		return new ResponseEntity<>(customers, HttpStatus.OK);
+		try {
+			List<Customer> customers = customerDao.findAll();
+			map.put("status", "success");
+			map.put("data", customers);
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", "Customers Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+           return resp; 
+		
 	}
 
-	// ---------------------------------------------------------------------------
-	// Add Customer
-	// ---------------------------------------------------------------------------
-	@PostMapping("/addCustomer")
-	public Customer createCustomer(@Valid @RequestBody Customer customer) {
-		return customerDao.save(customer);
-	}
+	
 
 	// ---------------------------------------------------------------------------
 	// Delete Customer
 	// ---------------------------------------------------------------------------
 
 	@DeleteMapping("/deleteCustomer/{id}")
-	public Map<String, Boolean> deleteCustomer(@PathVariable(value = "id") int employee_id) throws Exception {
-		Customer customer = customerDao.findById(employee_id)
+	public ResponseEntity<?> deleteCustomer(@PathVariable(value = "id") int employee_id) throws Exception {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		
+		Customer customer = null;
+		customer = customerDao.findById(employee_id)
 				.orElseThrow(() -> new Exception("Customer not found for this id :: " + employee_id));
 
-		customerDao.delete(customer);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
+		if(customer != null)
+		{
+			userService.deleteUser(customer.getEmail());
+			customerDao.delete(customer);
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "Customer Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		
+		return resp;
 	}
 
 	// ---------------------------------------------------------------------------
 	// Edit Customer
 	// ---------------------------------------------------------------------------
 
-	@PutMapping("/editCustomer/{id}")
-	public ResponseEntity<Customer> updateCustomer(@PathVariable(value = "id") int employee_id,
+	/* @PutMapping("/editCustomer/{id}")
+	public ResponseEntity<?> updateCustomer(@PathVariable(value = "id") int employee_id,
 			@Valid @RequestBody Customer customerDetails) throws Exception {
-		Customer customer = customerDao.findById(employee_id)
+	
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Customer customer = null;
+		customer = customerDao.findById(employee_id)
 				.orElseThrow(() -> new Exception("Customer not found for this id :: " + employee_id));
 
-		customer.setEmail(customerDetails.getEmail());
-		customer.setPassword(customerDetails.getPassword());
-		final Customer updatedCustomer = customerDao.save(customer);
-		return ResponseEntity.ok(updatedCustomer);
+		if(customer != null)
+		{
+			customer.setEmail(customerDetails.getEmail());
+			customer.setPassword(customerDetails.getPassword());
+			final Customer updatedCustomer = customerDao.save(customer);
+		}else
+		{
+			
+		}
+		
+		return resp;
+	}  */
+	
+	@PutMapping("/editCustomer/{id}")
+	public ResponseEntity<?> updateCustomer(@PathVariable(value = "id") int employee_id,
+			@Valid @RequestBody Customer customerDetails) throws Exception {
+	
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		customerDetails.setId(employee_id);
+		
+
+		if(customerDao.save(customerDetails) != null)
+		{
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "Student Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+		
+		return resp;
 	}
+	
+	
 
 	// --------------------------------------------------------------------------------------------------------------
+	
+	// ---------------------------------------------------------------------------
+		// Block/Unblock customer
+		// ---------------------------------------------------------------------------
+		
+		  @PutMapping("/blockCustomer/{id}") 
+		  public ResponseEntity<?> BlockCustomer(@PathVariable(value = "id") int customer_Id) throws Exception { 
+			 Customer customer =   customerService.findById(customer_Id); 
+			  ResponseEntity<?> resp = null;
+				Map<String, Object> map = new HashMap<String, Object>();
+			  if(userService.deactivateUser(customer.getEmail()) != null)
+			  {
+					map.put("status", "success");
+					resp = new ResponseEntity<>(map, HttpStatus.OK);
+				  
+			  }else
+			  {
+				  map.put("status", "error");
+					map.put("error", "Customer Not Found");
+					resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+				  
+			  }
+			  return resp; 
+		  
+		  
+		  
+		  }
+		  
+		   
+		  @PutMapping("/unblockCustomer/{id}") 
+		  public ResponseEntity<?> UnBlockCustomer(@PathVariable(value = "id") int customer_Id) throws Exception { 
+			 Customer customer =   customerService.findById(customer_Id); 
+			  ResponseEntity<?> resp = null;
+				Map<String, Object> map = new HashMap<String, Object>();
+			  if(userService.activateUser(customer.getEmail()) != null)
+			  {
+					map.put("status", "success");
+					resp = new ResponseEntity<>(map, HttpStatus.OK);
+				  
+			  }else
+			  {
+				  map.put("status", "error");
+					map.put("error", "Customer Not Found");
+					resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+				  
+			  }
+			  return resp; 
+		  
+		  
+		  
+		  }
+		  
+		  
+		 
+
+		// --------------------------------------------------------------------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// *************************Feedback-Management****************************************************************
 	// ---------------------------------------------------------------------------------------------------------------
 	// ---------------------------------------------------------------------------
@@ -232,28 +436,50 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 	@GetMapping("/Feedbacklist")
 	public ResponseEntity<?> fetchAllFeedbacks() {
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
 		System.out.println("in fetch all Feedback");
-
-		List<Feedback> feedbacks = feedbackDao.findAll();
-
-		if (feedbacks.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		// non empty list
-		return new ResponseEntity<>(feedbacks, HttpStatus.OK);
+         
+		try {
+			List<Feedback> feedbacks = feedbackDao.findAll();
+			map.put("status", "success");
+			map.put("data", feedbacks);
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	
+		
+		return resp;
 	}
 	// ---------------------------------------------------------------------------
 	// Delete Feedback
 	// ---------------------------------------------------------------------------
 
 	@DeleteMapping("/deleteFeedback/{id}")
-	public Map<String, Boolean> deleteFeedback(@PathVariable(value = "id") int id) throws Exception {
+	public ResponseEntity<?> deleteFeedback(@PathVariable(value = "id") int id) throws Exception {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		Feedback feedback = feedbackDao.findById(id)
 				.orElseThrow(() -> new Exception("Feedback not found for this id :: " + id));
 
-		feedbackDao.delete(feedback);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
+		try {
+			feedbackDao.delete(feedback);
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		
+		return resp;
 	}
 
 }

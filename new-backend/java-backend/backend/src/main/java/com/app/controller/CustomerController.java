@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,8 +61,22 @@ public class CustomerController {
 	// Add Feedback
 	// ---------------------------------------------------------------------------
 	@PostMapping("/addFeedback")
-	public Feedback createFeedback(@Valid @RequestBody Feedback feedback) {
-		return feedbackDao.save(feedback);
+	public ResponseEntity<?> createFeedback(@Valid @RequestBody Feedback feedback) {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(feedbackDao.save(feedback) != null )
+		{
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "Can't Add feedback");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return resp; 
 	}
 	
 	// ---------------------------------------------------------------------------
@@ -68,13 +84,26 @@ public class CustomerController {
 	// ---------------------------------------------------------------------------
 
 	@DeleteMapping("/deleteFeedback/{id}")
-	public Map<String, Boolean> deleteFeedback(@PathVariable(value = "id") int id) throws Exception {
+	public ResponseEntity<?> deleteFeedback(@PathVariable(value = "id") int id) throws Exception {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("in delete feedback " + id);
+		
 		Feedback feedback = feedbackDao.findById(id)
 				.orElseThrow(() -> new Exception("Feedback not found for this id :: " + id));
-
-		feedbackDao.delete(feedback);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
+        try {
+        	feedbackDao.delete(feedback);
+        	map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", "Can't delete feedback");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		
+		return resp;
 	}
 }

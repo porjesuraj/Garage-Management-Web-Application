@@ -48,7 +48,9 @@ public class Customer {
 	@JsonProperty("password")
 	private String password;
 
-	
+	@Column(length = 50)
+	@JsonProperty("employee_id")
+	private int employee_id;
 
 	@OneToMany(mappedBy = "customer",cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Customer_services> customer_services=new ArrayList<>();

@@ -154,10 +154,20 @@ public class AdminController {
 		ResponseEntity<?> resp = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		System.out.println("in delete vendor with id :  " + id);
+		
+		Optional<Vendor> vendor = vendorDao.findById(id); 
+		
 		try {
-			vendorService.deleteVendor(id);
-			map.put("status", "success");
-			resp = new ResponseEntity<>(map, HttpStatus.OK);
+			if(vendor.isPresent())
+			{
+				userService.deleteUser(vendor.get().getEmail());
+				
+				vendorService.deleteVendor(id);
+				map.put("status", "success");
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			}
+			
+			
 		} catch (Exception e) {
 			System.err.println("Exception : " + e.getMessage());
 			map.put("status", "error");
@@ -174,7 +184,7 @@ public class AdminController {
 	// Edit vendor
 	// ---------------------------------------------------------------------------
 
-	@PutMapping("/editVendor/{id}")
+	/*@PutMapping("/editVendor/{id}")
 	public ResponseEntity<?> updateVendor(@PathVariable(value = "id") int vendor_Id,
 			@Valid @RequestBody Vendor vendorDetails) throws RecordNotFoundException {
 		ResponseEntity<?> resp = null;
@@ -201,25 +211,87 @@ public class AdminController {
 		
 		return resp;
 		
+	}*/
+	
+	@PutMapping("/editVendor/{id}")
+	public ResponseEntity<?> updateVendor(@PathVariable(value = "id") int vendor_Id,
+			@Valid @RequestBody Vendor vendorDetails) throws RecordNotFoundException {
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		vendorDetails.setId(vendor_Id);
+	
+		
+		if(vendorDao.save(vendorDetails) != null)
+		{
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+			
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "Student Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		
+		return resp;
+		
 	}
-	
-	
 	
 
 	// ---------------------------------------------------------------------------
 	// Block/Unblock vendor
 	// ---------------------------------------------------------------------------
-	/*
-	 * @PutMapping("/blockVendor/{id}") public ResponseEntity<Vendor>
-	 * blockUnblockVendor(@PathVariable(value = "id") int vendor_Id,
-	 * 
-	 * @Valid @RequestBody Vendor vendorDetails) throws Exception { Vendor vendor =
-	 * vendorDao.findById(vendor_Id) .orElseThrow(() -> new
-	 * Exception("Vendor not found for this id :: " + vendor_Id));
-	 * 
-	 * vendor.setActive(vendorDetails.isActive()); final Vendor updatedVendor =
-	 * vendorDao.save(vendor); return ResponseEntity.ok(updatedVendor); }
-	 */
+	
+	  @PutMapping("/blockVendor/{id}") 
+	  public ResponseEntity<?> BlockVendor(@PathVariable(value = "id") int vendor_Id) throws Exception { 
+		  Vendor vendor =   vendorService.findById(vendor_Id); 
+		  ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+		  if(userService.deactivateUser(vendor.getEmail()) != null)
+		  {
+				map.put("status", "success");
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			  
+		  }else
+		  {
+			  map.put("status", "error");
+				map.put("error", "Vendor Not Found");
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			  
+		  }
+		  return resp; 
+	  
+	  
+	  
+	  }
+	  
+	   
+	  @PutMapping("/unblockVendor/{id}") 
+	  public ResponseEntity<?> UnblockVendor(@PathVariable(value = "id") int vendor_Id) throws Exception { 
+		  Vendor vendor =   vendorService.findById(vendor_Id); 
+		  ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+		  if(userService.activateUser(vendor.getEmail()) != null)
+		  {
+				map.put("status", "success");
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			  
+		  }else
+		  {
+			  map.put("status", "error");
+				map.put("error", "Vendor Not Found");
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			  
+		  }
+		  return resp; 
+	  
+	  
+	  
+	  }
+	  
+	  
+	 
 
 	// --------------------------------------------------------------------------------------------------------------
 	// *************************Offer-Management****************************************************************

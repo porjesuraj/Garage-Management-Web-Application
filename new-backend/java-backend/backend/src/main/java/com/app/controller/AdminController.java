@@ -85,6 +85,30 @@ public class AdminController {
 		return resp;
 	}
 
+	
+	// ---------------------------------------------------------------------------
+		// admin by id
+		// ---------------------------------------------------------------------------
+		@GetMapping("/{id}")
+		public ResponseEntity<?> getAdminById(@PathVariable int id) {
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();	
+			System.out.println("in admins with id :  " + id);	
+			try {	
+				Admin admin = adminService.findById(id);	
+				map.put("status", "success");
+				map.put("data", admin);
+				resp = new ResponseEntity<>(map, HttpStatus.OK);					
+			} catch (Exception e) {
+				System.err.println("Exception : " + e.getMessage());
+				map.put("status", "error");
+				map.put("error", e.getMessage());
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+			
+			return resp;
+		}
 
 	// ---------------------------------------------------------------------------
 	// List of all vendors
@@ -111,6 +135,32 @@ public class AdminController {
 		
 		
 	}
+	
+	// ---------------------------------------------------------------------------
+		// vendor by id
+		// ---------------------------------------------------------------------------
+		@GetMapping("/vendor/{id}")
+		public ResponseEntity<?> getVendorById(@PathVariable int id) 		
+		{
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();	
+			System.out.println("in fetch  vendor");	
+			try {	
+				Vendor vendor = vendorService.findById(id);
+
+				map.put("status", "success");
+				map.put("data", vendor);
+				resp = new ResponseEntity<>(map, HttpStatus.OK);					
+			} catch (Exception e) {
+				System.err.println("Exception : " + e.getMessage());
+				map.put("status", "error");
+				map.put("error", e.getMessage());
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}	
+			return resp;
+			
+			
+		}
 	
 
 	// ---------------------------------------------------------------------------

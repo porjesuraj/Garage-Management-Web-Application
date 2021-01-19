@@ -49,6 +49,8 @@ public class VendorController {
 	@Autowired
 	private UserService userService; 
 	
+	@Autowired
+	private VendorService vendorService; 
 	
 	@Autowired
 	private EmployeeService employeeService; 
@@ -60,6 +62,41 @@ public class VendorController {
 		System.out.println("in ctor of " + getClass().getName());
 	}
 
+	
+	// ---------------------------------------------------------------------------
+			// vendor by id
+			// ---------------------------------------------------------------------------
+			@GetMapping("/{id}")
+			public ResponseEntity<?> getVendorById(@PathVariable int id) 		
+			{
+				ResponseEntity<?> resp = null;
+				Map<String, Object> map = new HashMap<String, Object>();	
+				System.out.println("in fetch  vendor");	
+				try {	
+					Vendor vendor = vendorService.findById(id);
+
+					map.put("status", "success");
+					map.put("data", vendor);
+					resp = new ResponseEntity<>(map, HttpStatus.OK);					
+				} catch (Exception e) {
+					System.err.println("Exception : " + e.getMessage());
+					map.put("status", "error");
+					map.put("error", e.getMessage());
+					resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+				}	
+				return resp;
+				
+				
+			}
+		
+
+	
+	
+	
+	
+	
+	
+	
 	
 	// --------------------------------------------------------------------------------------------------------------
 	// ******************************Employee-Management***********************************************************
@@ -89,6 +126,30 @@ public class VendorController {
 		return resp; 
 	}
 
+	// ---------------------------------------------------------------------------
+		//  Employee of id
+		// ---------------------------------------------------------------------------
+		@GetMapping("/employee/{id}")
+		public ResponseEntity<?> getEmployeeById(@PathVariable int id) {
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			System.out.println("in fetch all vendor");
+
+			try {
+				Employee employee = employeeService.findById(id);
+				map.put("status", "success");
+				map.put("data", employee);
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			} catch (Exception e) {
+				System.err.println("Exception : " + e.getMessage());
+				map.put("status", "error");
+				resp = new ResponseEntity<>(map, HttpStatus.NO_CONTENT);
+			}
+			
+			return resp; 
+		}
+	
 	// ---------------------------------------------------------------------------
 	// Add Employee
 	// ---------------------------------------------------------------------------
@@ -269,8 +330,34 @@ public class VendorController {
            return resp; 
 		
 	}
-
 	
+	// ---------------------------------------------------------------------------
+		//  Customer by id
+		// ---------------------------------------------------------------------------
+
+	@GetMapping("/customer/{id}")
+	public ResponseEntity<?> getCustomerById(@PathVariable int id) {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		System.out.println("in fetch all Customer");
+
+		try {
+			Customer customer = customerService.findById(id);
+			map.put("status", "success");
+			map.put("data", customer);
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", "Customers Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+           return resp; 
+		
+	}
 
 	// ---------------------------------------------------------------------------
 	// Delete Customer

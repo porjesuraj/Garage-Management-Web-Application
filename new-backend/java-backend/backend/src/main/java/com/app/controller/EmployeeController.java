@@ -161,7 +161,33 @@ public class EmployeeController {
 		return resp;
 	}
 	
-	
+	// ---------------------------------------------------------------------------
+		// Customer by id
+		// ---------------------------------------------------------------------------
+	@GetMapping("/customer/{id}")
+	public ResponseEntity<?> getCustomerById(@PathVariable int id) {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		System.out.println("in fetch all Customer");
+
+		try {
+			Customer customer = customerService.findById(id);
+			map.put("status", "success");
+			map.put("data", customer);
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", "Customers Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+           return resp; 
+		
+	}
+
 	
 	
 	// ---------------------------------------------------------------------------

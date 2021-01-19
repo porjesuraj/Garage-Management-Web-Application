@@ -25,8 +25,10 @@ import com.app.dao.FeedbackDao;
 import com.app.pojos.Customer;
 import com.app.pojos.Employee;
 import com.app.pojos.Feedback;
+import com.app.pojos.ServiceRequest;
 import com.app.pojos.User;
 import com.app.service.CustomerService;
+import com.app.service.ServiceRequestService;
 import com.app.service.UserService;
 @CrossOrigin
 @RestController // @Controller + @ResponseBody
@@ -43,6 +45,9 @@ public class EmployeeController {
 	private UserService userService;
 	@Autowired
 	private CustomerService customerService; 
+	
+	@Autowired
+	private ServiceRequestService serviceRequestService;
 
 	public EmployeeController() {
 		System.out.println("in ctor of " + getClass().getName());
@@ -189,7 +194,64 @@ public class EmployeeController {
 	}
 
 	
-	
+	//------------------------------------------------------------------------
+			// Add Service Request
+			//------------------------------------------------------------------
+			@PostMapping("/customer/addService/{customer_id}")
+			public ResponseEntity<?> createService(@Valid @RequestBody ServiceRequest serviceRequest,@PathVariable int customer_id) {
+				
+				ResponseEntity<?> resp = null;
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+		         serviceRequest.setCustomerId(customer_id);
+				
+				if(serviceRequestService.addServiceRequest(serviceRequest) != null )
+				{
+					map.put("status", "success");
+					resp = new ResponseEntity<>(map, HttpStatus.OK);
+				}else
+				{
+					map.put("status", "error");
+					map.put("error", "Can't Add service request");
+					resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				return resp; 
+			}
+			
+			
+	//------------------------------------------------------------------
+	// update Service Status
+	//-----------------------------------------------------------------
+			@PutMapping("/customer/service/updateStatus/{customer_id}")
+			public ResponseEntity<?> updateStatus(@PathVariable int stock_id, @PathVariable int customer_id) throws Exception {
+				ResponseEntity<?> resp = null;
+				Map<String, Object> map = new HashMap<String, Object>();
+				System.out.println("in update customer service status");
+
+				  ServiceRequest request = null;
+				  request =  serviceRequestService.getByCustomerId(customer_id);
+				
+				
+				
+				if(request != null)
+				{
+					request.setStatus("COMPLETED");
+					map.put("status", "success");
+					resp = new ResponseEntity<>(map, HttpStatus.OK);
+					
+				}else
+				{
+					map.put("status", "error");
+					map.put("error", "Customer Service  Not Found");
+					resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				
+				
+				return resp;
+			}
+			
+			
+			
 	// ---------------------------------------------------------------------------
 	// List of all Feedback
 	// ---------------------------------------------------------------------------

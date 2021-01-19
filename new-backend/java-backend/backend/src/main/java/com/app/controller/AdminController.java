@@ -215,10 +215,12 @@ public class AdminController {
 				vendorService.deleteVendor(id);
 				map.put("status", "success");
 				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			}else
+			{
+				
 			}
-			
-			
-		} catch (Exception e) {
+				
+		   } catch (Exception e) {
 			System.err.println("Exception : " + e.getMessage());
 			map.put("status", "error");
 			map.put("error", "Can't delete Vendor");

@@ -23,6 +23,7 @@ public class AdminService implements IAdminService {
 		Optional<Admin> admin = adminDao.findById(id);
 		if (admin.isPresent())
 			return admin.get();
+		else
 		return null;
 	}
 	

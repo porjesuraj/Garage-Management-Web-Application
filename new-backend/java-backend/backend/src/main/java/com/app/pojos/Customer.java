@@ -2,22 +2,28 @@ package com.app.pojos;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Past;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "customer")
+@JsonInclude(value = Include.NON_DEFAULT)
 public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +35,8 @@ public class Customer {
 	private String name;
 
 	@Column(length = 200)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Past
 	@JsonProperty("birth_date")
 	private LocalDate birthDate;
 
@@ -50,10 +58,11 @@ public class Customer {
 
 	@Column(length = 50)
 	@JsonProperty("employee_id")
-	private int employee_id;
+	private int employee_id ;
 
-	@OneToMany(mappedBy = "customer",cascade = CascadeType.ALL,orphanRemoval = true)
-	private List<Customer_services> customer_services=new ArrayList<>();
+	
+	@OneToMany(mappedBy = "customerId", fetch = FetchType.EAGER)
+	private List<ServiceRequest> request_list = new ArrayList<>(); 
 	
 	
 	/* ============================== Constructor ============================== */
@@ -141,27 +150,6 @@ public class Customer {
 		this.password = password;
 	}
 	
-
-	public List<Customer_services> getCustomer_services() {
-		return customer_services;
-	}
-
-	public void setCustomer_services(List<Customer_services> customer_services) {
-		this.customer_services = customer_services;
-	}
-	
-	//add helper methods : 
-	public void addCustomerService(Customer_services cs)
-	{
-	     customer_services.add(cs); 
-		cs.setCustomer(this);
-	}
-	public void removeCustomerSerivice(Customer_services cs)
-	{
-		customer_services.remove(cs); 
-		cs.setCustomer(null);
-		
-	}
 	
 	/* ================================ toString =============================== */
 

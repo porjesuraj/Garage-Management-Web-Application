@@ -21,10 +21,13 @@ import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "employee")
+@JsonInclude(value = Include.NON_DEFAULT)
 public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

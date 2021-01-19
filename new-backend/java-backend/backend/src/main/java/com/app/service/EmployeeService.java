@@ -23,6 +23,7 @@ public class EmployeeService {
 		Optional<Employee> employee = employeeDao.findById(id); 
 		if (employee.isPresent())
 			return employee.get();
+		else
 		return null;
 	}
 	

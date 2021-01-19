@@ -19,6 +19,7 @@ public class CustomerService {
 		Optional<Customer> customer = customerDao.findById(id);
 		if (customer.isPresent())
 			return customer.get();
+		else
 		return null;
 	}
 	

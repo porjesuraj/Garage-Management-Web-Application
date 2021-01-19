@@ -21,7 +21,9 @@ import com.app.dao.CustomerDao;
 import com.app.dao.FeedbackDao;
 import com.app.pojos.Customer;
 import com.app.pojos.Feedback;
+import com.app.pojos.ServiceRequest;
 import com.app.service.CustomerService;
+import com.app.service.ServiceRequestService;
 @CrossOrigin
 @RestController // @Controller + @ResponseBody
 @RequestMapping("/customer")
@@ -35,9 +37,15 @@ public class CustomerController {
 	@Autowired
 	private FeedbackDao feedbackDao;
 
+	@Autowired
+	private ServiceRequestService serviceRequestService;
+	
+	
 	public CustomerController() {
 		System.out.println("in ctor of " + getClass().getName());
 	}
+	
+	
 	
 	
 	// ---------------------------------------------------------------------------
@@ -67,6 +75,32 @@ public class CustomerController {
 			
 		}
 
+	
+		//------------------------------------------------------------------------
+		// Add Service Request
+		//------------------------------------------------------------------
+		@PostMapping("/addService/{customer_id}")
+		public ResponseEntity<?> createService(@Valid @RequestBody ServiceRequest serviceRequest,@PathVariable int customer_id) {
+			
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+	         serviceRequest.setCustomerId(customer_id);
+			
+			if(serviceRequestService.addServiceRequest(serviceRequest) != null )
+			{
+				map.put("status", "success");
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			}else
+			{
+				map.put("status", "error");
+				map.put("error", "Can't Add service request");
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			return resp; 
+		}
+		
+		
 		
 	
 	// ---------------------------------------------------------------------------

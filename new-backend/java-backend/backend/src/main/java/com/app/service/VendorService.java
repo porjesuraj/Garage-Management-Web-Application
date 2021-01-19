@@ -27,7 +27,11 @@ public class VendorService implements IVendorService{
 		Optional<Vendor> vendor = vendorDao.findById(id); 
 		if (vendor.isPresent())
 			return vendor.get();
-		return null;
+		else
+			return null;
+		 
+	      
+		
 	}
 
 	@Override
@@ -39,14 +43,19 @@ public class VendorService implements IVendorService{
 	public void deleteVendor(int id) {
 		
 		// chk if product exists : yes : delete , otherwise throw exc.
+		
+		
+		
 		Optional<Vendor> optional = vendorDao.findById(id);
 		if (optional.isPresent())
 		vendorDao.deleteById(id);
 		else
-	// if product is not found : throw custom exception
-	System.out.println("Not Founded");
+		{
+	   // if product is not found : throw custom exception
+	    System.out.println("Not Founded");
+	   
 		throw new RecordNotFoundException("vendor not found"); 
-		
+		}
 	}
 	
 	

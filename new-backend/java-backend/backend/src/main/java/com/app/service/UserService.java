@@ -85,6 +85,7 @@ public class UserService implements UserDetailsService {
 		Optional<User> lastUser_ = userDao.getLastUser();
 		if(lastUser_.isPresent())
 			return lastUser_.get();
+		else
 		return null;
 	}
 }

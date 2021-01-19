@@ -7,10 +7,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "offer")
+@JsonInclude(value = Include.NON_DEFAULT)
 public class Offer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

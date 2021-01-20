@@ -493,27 +493,9 @@ public class VendorController {
 					resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 				  
 			  }
-			  return resp; 
-		  
-		  
-		  
+			  return resp; 	  
 		  }
-		  
-		  
-		 
-
 		// --------------------------------------------------------------------------------------------------------------
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	// *************************Feedback-Management****************************************************************

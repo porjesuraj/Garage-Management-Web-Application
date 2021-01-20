@@ -76,3 +76,30 @@ while requesting service
  "vehicle_reg_no" : "MH 15 2020",
  "vehicle_type"   : "CAR"
 }
+
+
+{
+         
+ "discount"     :  10 , 
+ "labour_charges" :1000 , 
+ "out_date"      : "2020-01-20", 
+ "status"        : "COMPLETED", 
+ "total"         : discount + labour_charges
+ 
+}
+
+stock 
+{
+ "stock_id" : ,  
+ "item_name" : "", 
+ "price"  : ,   
+ "quantity" :   
+}
+
+
+{
+   
+ "item_name" : "gear", 
+ "price"  : 1000,   
+ "quantity" : 2  
+}

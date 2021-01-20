@@ -26,9 +26,11 @@ import com.app.pojos.Customer;
 import com.app.pojos.Employee;
 import com.app.pojos.Feedback;
 import com.app.pojos.ServiceRequest;
+import com.app.pojos.Stock;
 import com.app.pojos.User;
 import com.app.service.CustomerService;
 import com.app.service.ServiceRequestService;
+import com.app.service.StockService;
 import com.app.service.UserService;
 @CrossOrigin
 @RestController // @Controller + @ResponseBody
@@ -48,6 +50,9 @@ public class EmployeeController {
 	
 	@Autowired
 	private ServiceRequestService serviceRequestService;
+	
+	@Autowired
+	private StockService stockService; 
 
 	public EmployeeController() {
 		System.out.println("in ctor of " + getClass().getName());
@@ -222,20 +227,20 @@ public class EmployeeController {
 	//------------------------------------------------------------------
 	// update Service Status
 	//-----------------------------------------------------------------
-			@PutMapping("/customer/service/updateStatus/{customer_id}")
-			public ResponseEntity<?> updateStatus(@PathVariable int stock_id, @PathVariable int customer_id) throws Exception {
+			@PutMapping("/customer/service/acceptServiceRequest/{customer_id}")
+			public ResponseEntity<?> updateStatus( @PathVariable int customer_id) throws Exception {
 				ResponseEntity<?> resp = null;
 				Map<String, Object> map = new HashMap<String, Object>();
 				System.out.println("in update customer service status");
 
 				  ServiceRequest request = null;
-				  request =  serviceRequestService.getByCustomerId(customer_id);
+				  request =  serviceRequestService.getByCustomerIdAndStatus(customer_id, "REQUESTED");
 				
 				
 				
 				if(request != null)
 				{
-					request.setStatus("COMPLETED");
+					request.setStatus("PENDING");
 					map.put("status", "success");
 					resp = new ResponseEntity<>(map, HttpStatus.OK);
 					
@@ -249,6 +254,43 @@ public class EmployeeController {
 				
 				return resp;
 			}
+			
+			@PutMapping("/customer/service/createInvoice/{customer_id}")
+			public ResponseEntity<?> makeInvoiceFromServiceRequest( @PathVariable int customer_id,@RequestBody ServiceRequest serviceRequest) throws Exception {
+				ResponseEntity<?> resp = null;
+				Map<String, Object> map = new HashMap<String, Object>();
+				System.out.println("in create invoice");
+
+				  ServiceRequest request = null;
+				  request =  serviceRequestService.getByCustomerIdAndStatus(customer_id, "PENDING");
+				
+				
+				
+				if(request != null)
+				{
+					request.setOutDate(serviceRequest.getOutDate());
+					request.setDiscount(serviceRequest.getDiscount());
+					request.setStatus("COMPLETED");
+					request.setLabourCharges(serviceRequest.getLabourCharges());
+					request.setTotal(serviceRequest.getTotal());
+					
+					 serviceRequestService.addServiceRequest(request); 
+					map.put("status", "success");
+					
+					
+					resp = new ResponseEntity<>(map, HttpStatus.OK);
+					
+				}else
+				{
+					map.put("status", "error");
+					map.put("error", "Customer Service  Not Found");
+					resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				
+				
+				return resp;
+			}
+			
 			
 			
 			
@@ -276,4 +318,85 @@ public class EmployeeController {
 		
 		return resp;
 	}
+	
+	//------------------------------------------------------------------------
+	// Add Service Request
+	//------------------------------------------------------------------
+	@PostMapping("/addStock")
+	public ResponseEntity<?> addStock(@Valid @RequestBody Stock newStock) {
+		
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+         
+		
+		if(stockService.addStock(newStock) != null )
+		{
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "Can't Add service request");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return resp; 
+	}
+	
+	
+//------------------------------------------------------------------
+// update Service Status
+//-----------------------------------------------------------------
+	@PutMapping("/updateStock/{stock_id}")
+	public ResponseEntity<?> updateStock( @PathVariable int stock_id,@RequestBody Stock updatedStock) throws Exception {
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("in update customer service status");
+
+		              Stock newStock = null; 
+		              newStock =  stockService.getById(stock_id); 
+		  
+		              
+		  
+		
+		
+		
+		
+		if(newStock != null)
+		{
+			newStock.setQuantity(updatedStock.getQuantity());
+			newStock.setPrice(updatedStock.getPrice());
+			newStock.setItemName(updatedStock.getItemName());
+			
+			stockService.addStock(newStock); 
+			
+			map.put("status", "success");
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+			
+		}else
+		{
+			map.put("status", "error");
+			map.put("error", "Customer Service  Not Found");
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		
+		return resp;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

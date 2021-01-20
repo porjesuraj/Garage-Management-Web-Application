@@ -282,7 +282,7 @@ public class AdminController {
 		}else
 		{
 			map.put("status", "error");
-			map.put("error", "Student Not Found");
+			map.put("error", "vendor Not Found");
 			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
 		

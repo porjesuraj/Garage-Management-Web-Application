@@ -34,9 +34,22 @@ onLogin() {
         sessionStorage['role'] = response['role']
 
         // goto the dashboard
+        if(response['role']== 'ADMIN'){
         this.router.navigate(['/admin/home'])
-        alert(`Welcome`)
-
+        alert(`Welcome admin`)
+        }
+        else if(response['role']== 'VENDOR'){
+          this.router.navigate(['/vendor/home'])
+          alert(`Welcome Vendor`)
+          }
+          else if(response['role']== 'EMPLOYEE'){
+            this.router.navigate(['/employee/home'])
+            alert(`Welcome Employee`)
+            }
+            else if(response['role']== 'CUSTOMER'){
+              this.router.navigate(['/customer/home'])
+              alert(`Welcome Customer`)
+              }
       } else {
         alert('invalid email or password')
       }

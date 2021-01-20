@@ -55,12 +55,8 @@ export class VendorListComponent implements OnInit {
     
     this.adminService.blockVendor(vendor['id']).subscribe(response =>{
       if(response['status']=='success'){
-        console.log("Hello");
-
         this.loadVendors()
       }else{
-        console.log("DDDD");
-
         console.log(response['error'])
       }
     })

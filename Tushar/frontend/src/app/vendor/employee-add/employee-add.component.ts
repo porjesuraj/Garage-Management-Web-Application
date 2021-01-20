@@ -1,15 +1,15 @@
-import { AdminService } from './../admin.service';
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { VendorService } from '../vendor.service';
 import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
-  selector: 'app-vendor-add',
-  templateUrl: './vendor-add.component.html',
-  styleUrls: ['./vendor-add.component.css']
+  selector: 'app-employee-add',
+  templateUrl: './employee-add.component.html',
+  styleUrls: ['./employee-add.component.css']
 })
-export class VendorAddComponent implements OnInit {
+export class EmployeeAddComponent implements OnInit {
 
   name
   email
@@ -17,12 +17,12 @@ export class VendorAddComponent implements OnInit {
   address
   contact
 
-  vendor=null
+  employee=null
 
   constructor(
     private location:Location,
     private router:Router,
-    private adminService:AdminService,
+    private vendorService:VendorService,
     private activatedRoute: ActivatedRoute,
 
   ) { }
@@ -32,17 +32,17 @@ export class VendorAddComponent implements OnInit {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
 
     if (id) {
-      // edit product
-      this.adminService.getVendorDetails(id).subscribe(response => {
+      // edit employee
+      this.vendorService.getEmployeeDetails(id).subscribe(response => {
           if (response['status'] == 'success') {
-            let vendors = response['data']
-            if (vendors.length > 0) {
-              this.vendor = vendors[0]
-              this.name = this.vendor['name']
-              this.email = this.vendor['email']
-              this.password = this.vendor['password']
-              this.address = this.vendor['address']
-              this.contact = this.vendor['contact']
+            let employees = response['data']
+            if (employees.length > 0) {
+              this.employee = employees[0]
+              this.name = this.employee['name']
+              this.email = this.employee['email']
+              this.password = this.employee['password']
+              this.address = this.employee['address']
+              this.contact = this.employee['contact']
             }
           }
         })
@@ -51,12 +51,12 @@ export class VendorAddComponent implements OnInit {
 
   onSave(){
 
- this.adminService.addVendor(this.name,this.email,this.password,this.address,this.contact).subscribe(response=>{
+ this.vendorService.addEmployee(this.name,this.email,this.password,this.address,this.contact).subscribe(response=>{
       if(response['status']=='success'){
-        this.router.navigate(['/admin/vendor-list'])
+        this.router.navigate(['/vendor/employee-list'])
       }else{
         console.log(response['error'])
-        window.alert("Vendor is already Used")
+        window.alert("Employee is already Used")
       }
     })
   }
@@ -66,21 +66,21 @@ export class VendorAddComponent implements OnInit {
 
   onUpdate() {
 
-    if (this.vendor) {
+    if (this.employee) {
       // edit
-      this.adminService
-        .updateVendor(this.vendor['id'], this.name, this.email, this.password, this.address, this.contact)
+      this.vendorService
+        .updateEmployee(this.employee['id'], this.name, this.email, this.password, this.address, this.contact)
         .subscribe(response => {
           if (response['status'] == 'success') {
-            this.router.navigate(['/vendor-list'])
+            this.router.navigate(['/employee-list'])
           }
         })
     } else {
       // insert
-      this.adminService.addVendor(this.name, this.email, this.password, this.address, this.contact)
+      this.vendorService.addEmployee(this.name, this.email, this.password, this.address, this.contact)
         .subscribe(response => {
           if (response['status'] == 'success') {
-            this.router.navigate(['/vendor-list'])
+            this.router.navigate(['/employee-list'])
           }
         })
     }

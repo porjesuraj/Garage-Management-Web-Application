@@ -1,7 +1,7 @@
-<p>vendor-add works!</p>
+<p>employee-add works!</p>
 <div class="card">
     <div class="card-header">
-      <h4>{{vendor ? 'Update' : 'Add'}}Vendor</h4>
+      <h4>{{employee ? 'Update' : 'Add'}}Employee</h4>
     </div>
     <div class="card-body">
       <div class="form">
@@ -45,7 +45,7 @@
     </div>
   
         <div class="form-group">
-          <button (click)="onUpdate()" class="btn btn-success">{{vendor ? 'Update' : 'Add'}}</button>
+          <button (click)="onUpdate()" class="btn btn-success">{{employee ? 'Update' : 'Add'}}</button>
           <a style="margin-left: 10px;" routerLink="/product-list" class="btn btn-danger">Cancel</a>
             
 <!--           <button (click)="onSave()" class="btn btn-success">Save</button>

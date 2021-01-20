@@ -9,7 +9,7 @@ import com.app.pojos.Stock;
 public interface StockDao extends JpaRepository<Stock, Integer> {
 	
 	
-	List<Stock> findByItemType(String type); 
+	 
 	
 	List<Stock> findByQuantity(int quantity); 
 	

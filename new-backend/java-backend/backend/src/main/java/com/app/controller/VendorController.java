@@ -105,15 +105,15 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 	// List of all Employee
 	// ---------------------------------------------------------------------------
-	@GetMapping("/employeeList")
-	public ResponseEntity<?> fetchAllEmployees() {
+	@GetMapping("/employeeList/{vendorId}")
+	public ResponseEntity<?> fetchAllEmployees(@PathVariable int vendorId) {
 		ResponseEntity<?> resp = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		System.out.println("in fetch all vendor");
 
 		try {
-			List<Employee> employees = employeeDao.findAll();
+			List<Employee> employees = employeeDao.findAllByVendorId(vendorId);
 			map.put("status", "success");
 			map.put("data", employees);
 			resp = new ResponseEntity<>(map, HttpStatus.OK);

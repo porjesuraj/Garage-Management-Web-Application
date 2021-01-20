@@ -49,3 +49,30 @@ employeee:
  " contact" : "8668951369" 
  }
 
+
+service request: 
+{
+ "request_id" : ,     
+ "customer_id" : ,     
+ "delivery_type": "DROPBY" ,  
+ "discount"     :   , 
+ "labour_charges" : , 
+ "out_date"      : "", 
+ "service_date"  : "", 
+ "status"        : "", 
+ "total"         : "", 
+ "vehicle_brand"  : "", 
+ "vehicle_model"  : " ",
+ "vehicle_reg_no" : "",
+ "vehicle_type"   : ""
+}
+
+while requesting service
+{   
+ "customer_id" : 1,     
+ "delivery_type": "DROPBY" ,    
+ "vehicle_brand"  : "ford", 
+ "vehicle_model"  : "figo",
+ "vehicle_reg_no" : "MH 15 2020",
+ "vehicle_type"   : "CAR"
+}

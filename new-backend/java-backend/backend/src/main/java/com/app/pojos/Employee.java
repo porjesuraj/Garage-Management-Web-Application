@@ -55,7 +55,7 @@ public class Employee {
 	private String password;
 
 	@JsonProperty("vendor_id")
-	private int vendor_id;
+	private int vendorId;
 	
 	@OneToMany(mappedBy = "employee_id", cascade = CascadeType.PERSIST)
 	private List<Customer> customers = new ArrayList<>();
@@ -73,7 +73,7 @@ public class Employee {
 		this.birthDate = birthDate;
 		this.email = email;
 		this.password = password;
-		this.vendor_id = vendor_id;
+		this.vendorId = vendor_id;
 	}
 
 	
@@ -122,20 +122,22 @@ public class Employee {
 		this.password = password;
 	}
 
-	public int getVendor_id() {
-		return vendor_id;
+	
+
+
+	public int getVendorId() {
+		return vendorId;
 	}
 
-	public void setVendor_id(int vendor_id) {
-		this.vendor_id = vendor_id;
+	public void setVendorId(int vendorId) {
+		this.vendorId = vendorId;
 	}
-
 
 	/* ================================ toString =============================== */
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", name=" + name + ", birthDate=" + birthDate + ", email=" + email + ", password="
-				+ password + ", vendor_id=" + vendor_id + "]";
+				+ password + ", vendor_id=" + vendorId + "]";
 	}
 
 

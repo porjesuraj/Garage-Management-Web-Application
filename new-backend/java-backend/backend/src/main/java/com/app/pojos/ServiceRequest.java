@@ -1,12 +1,16 @@
 package com.app.pojos;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Past;
 
@@ -39,21 +43,43 @@ public class ServiceRequest {
 	private String vehicleBrand;
 	
 	@Column(length = 45)
-	@JsonProperty("vehicle_license_plate_no")
-	private String vehicle_license_plate_no; 
+	@JsonProperty("vehicle_reg_no")
+	private String vehicleRegNo; 
 	
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonProperty("service_date")
 	private LocalDate serviceDate =  LocalDate.now();
 	
-	//[PICKUP or DROP]
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonProperty("out_date")
+	private LocalDate outDate ;
+	
+	
+	//[PICKUP or DROPBY]
+	@JsonProperty("delivery_type")
 	private String deliveryType; 
 	
 	@JsonProperty("customer_Id")
 	private int customerId;
 	//[PENDING or COMPLETE]
+	
+	@JsonProperty("status")
 	private String status = "PENDING"; 
+	
+	@JsonProperty("labour_charges")
+	private double labourCharges = 0.0; 
+	
+	@JsonProperty("discount")
+	private double discount = 0.0; 
+	
+	
+	@JsonProperty("total")
+	private double total = 0.0; 
+	
+	
+	
+	
 	//-----------------------------------------
 	// Constructor
 	//------------------------------------------
@@ -63,17 +89,24 @@ public class ServiceRequest {
 	}
 
 	
+	
+
 	public ServiceRequest(int requestId, String vehicleType, String vehicleModel, String vehicleBrand,
-			String vehicle_license_plate_no, LocalDate serviceDate, String deliveryType, String status) {
+			String vehicleRegNo, LocalDate serviceDate, LocalDate outDate, String deliveryType, String status,
+			double labourCharges, double discount, double total) {
 		super();
 		this.requestId = requestId;
 		this.vehicleType = vehicleType;
 		this.vehicleModel = vehicleModel;
 		this.vehicleBrand = vehicleBrand;
-		this.vehicle_license_plate_no = vehicle_license_plate_no;
+		this.vehicleRegNo = vehicleRegNo;
 		this.serviceDate = serviceDate;
+		this.outDate = outDate;
 		this.deliveryType = deliveryType;
 		this.status = status;
+		this.labourCharges = labourCharges;
+		this.discount = discount;
+		this.total = total;
 	}
 
 
@@ -86,7 +119,17 @@ public class ServiceRequest {
 	// getter and setter
 	//------------------------------------------
 		
-	
+
+
+
+
+
+
+
+
+
+
+
 	public int getRequestId() {
 		return requestId;
 	}
@@ -126,15 +169,6 @@ public class ServiceRequest {
 		this.vehicleBrand = vehicleBrand;
 	}
 
-
-	public String getVehicle_license_plate_no() {
-		return vehicle_license_plate_no;
-	}
-
-
-	public void setVehicle_license_plate_no(String vehicle_license_plate_no) {
-		this.vehicle_license_plate_no = vehicle_license_plate_no;
-	}
 
 
 	public LocalDate getServiceDate() {
@@ -176,19 +210,89 @@ public class ServiceRequest {
 	}
 
 
+
+
+	public String getVehicleRegNo() {
+		return vehicleRegNo;
+	}
+
+
+
+
+	public void setVehicleRegNo(String vehicleRegNo) {
+		this.vehicleRegNo = vehicleRegNo;
+	}
+
+
+
+
+	public LocalDate getOutDate() {
+		return outDate;
+	}
+
+
+
+
+	public void setOutDate(LocalDate outDate) {
+		this.outDate = outDate;
+	}
+
+
+
+
+	public double getLabourCharges() {
+		return labourCharges;
+	}
+
+
+
+
+	public void setLabourCharges(double labourCharges) {
+		this.labourCharges = labourCharges;
+	}
+
+
+
+
+	public double getDiscount() {
+		return discount;
+	}
+
+
+
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
+
+
+
+
+	public double getTotal() {
+		return total;
+	}
+
+
+
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
+
 	//--------------------------------------
 	// to string
 	//-----------------------------------
 	
+
 	@Override
 	public String toString() {
 		return "ServiceRequest [requestId=" + requestId + ", vehicleType=" + vehicleType + ", vehicleModel="
-				+ vehicleModel + ", vehicleBrand=" + vehicleBrand + ", vehicle_license_plate_no="
-				+ vehicle_license_plate_no + ", serviceDate=" + serviceDate + ", deliveryType=" + deliveryType
-				+ ", customerId=" + customerId + ", status=" + status + "]";
+				+ vehicleModel + ", vehicleBrand=" + vehicleBrand + ", vehicleRegNo=" + vehicleRegNo + ", serviceDate="
+				+ serviceDate + ", outDate=" + outDate + ", deliveryType=" + deliveryType + ", customerId=" + customerId
+				+ ", status=" + status + ", labourCharges=" + labourCharges + ", discount=" + discount + ", total="
+				+ total + "]";
 	}
 	
-
 
 
 

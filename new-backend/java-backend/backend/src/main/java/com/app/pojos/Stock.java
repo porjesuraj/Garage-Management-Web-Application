@@ -34,10 +34,6 @@ public class Stock {
 	@JsonProperty("quantity")
 	private int quantity;
 	
-	@Column(name="item_type",length = 20)
-	@JsonProperty("item_type")
-	private String itemType; 
-	
 	//-------------------------------------------------------------------------
 	// constructor
 	//--------------------------------------------------------------------------
@@ -47,29 +43,19 @@ public class Stock {
 	}
 
 
-	
-	public Stock(int stockId, String itemName, double price, int quantity, String itemType) {
+	public Stock(int stockId, String itemName, double price, int quantity) {
 		super();
 		this.stockId = stockId;
 		this.itemName = itemName;
 		this.price = price;
 		this.quantity = quantity;
-		this.itemType = itemType;
+		
 	}
-
-
 
 	//-------------------------------------------------------------
 	//getter and setter
 	//-----------------------------------------------------------------
 	
-	
-	
-
-
-
-
-
 	public int getStockId() {
 		return stockId;
 	}
@@ -100,14 +86,6 @@ public class Stock {
 	}
 
 
-	public String getItemType() {
-		return itemType;
-	}
-
-
-	public void setItemType(String itemType) {
-		this.itemType = itemType;
-	}
 
 
 	public int getQuantity() {
@@ -125,7 +103,7 @@ public class Stock {
 	@Override
 	public String toString() {
 		return "Stock [stockId=" + stockId + ", itemName=" + itemName + ", price=" + price + ", quantity=" + quantity
-				+ ", itemType=" + itemType + "]";
+				+  "]";
 	}
 
 

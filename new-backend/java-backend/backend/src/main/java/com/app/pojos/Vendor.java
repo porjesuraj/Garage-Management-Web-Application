@@ -49,7 +49,7 @@ public class Vendor {
 
 	
 	
-	@OneToMany(mappedBy = "vendor_id",cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(mappedBy = "vendorId",cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Employee> employees = new ArrayList<>(); 
 	
 	

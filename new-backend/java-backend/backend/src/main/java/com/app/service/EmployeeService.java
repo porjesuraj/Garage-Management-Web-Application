@@ -1,5 +1,6 @@
 package com.app.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,19 @@ public class EmployeeService {
 			return employee.get();
 		else
 		return null;
+	}
+	
+	public List<Employee> getAllByVendorId(int vendorId)
+	{
+		List<Employee> list = null;
+		list = employeeDao.findAllByVendorId(vendorId);
+		
+		if(list != null)
+		return list; 
+		else
+			return null;
+		
+		
 	}
 	
 	public Employee addEmployee(Employee newEmployee)

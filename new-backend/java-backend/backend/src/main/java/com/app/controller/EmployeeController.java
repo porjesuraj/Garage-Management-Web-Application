@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -155,6 +156,29 @@ public class EmployeeController {
 		return resp;
 	}
 	
+	//----------------------------------------------------------------------------
+	// Customer list
+	//----------------------------------------------------------------------------
+	 @GetMapping("/customerList/{employeeId}") public ResponseEntity<?>
+	  fetchAllCustomer(@PathVariable int employeeId) { ResponseEntity<?> resp =
+	 null; Map<String, Object> map = new HashMap<String, Object>();
+	  
+	 System.out.println("in fetch all customer");
+	 
+	 
+	 
+	 try { List<Customer> customer = customerDao.findAllByEmployeeId(employeeId);
+	  map.put("status", "success");
+	  map.put("data",  customer); 
+	  resp = new ResponseEntity<>(map, HttpStatus.OK); } catch (Exception e) {
+	  System.err.println("Exception : " + e.getMessage()); map.put("status",
+	 "error"); resp = new ResponseEntity<>(map, HttpStatus.NO_CONTENT); }
+	  
+	  return resp; }
+	 
+	
+	
+	
 	// ---------------------------------------------------------------------------
 		// Customer by id
 		// ---------------------------------------------------------------------------
@@ -278,8 +302,177 @@ public class EmployeeController {
 				return resp;
 			}
 			
+			// ---------------------------------------------------------------------------
+			// List of all Customer
+			// ---------------------------------------------------------------------------
+			@GetMapping("/Customerlist")
+			public ResponseEntity<?> fetchAllCustomers() {
+				
+				ResponseEntity<?> resp = null;
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				System.out.println("in fetch all Customer");
+
+				try {
+					List<Customer> customers = customerDao.findAll();
+					map.put("status", "success");
+					map.put("data", customers);
+					resp = new ResponseEntity<>(map, HttpStatus.OK);
+				} catch (Exception e) {
+					System.err.println("Exception : " + e.getMessage());
+					map.put("status", "error");
+					map.put("error", "Customers Not Found");
+					resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				
+		           return resp; 
+				
+			}
+			
+			// ---------------------------------------------------------------------------
+						// List of all Customer by employee id
+						// ---------------------------------------------------------------------------
+						@GetMapping("/Customerlist/{employee_id}")
+						public ResponseEntity<?> fetchAllCustomers(@PathVariable int employee_id) {
+							
+							ResponseEntity<?> resp = null;
+							Map<String, Object> map = new HashMap<String, Object>();
+							
+							System.out.println("in fetch all Customer");
+
+							try {
+								List<Customer> customers = customerDao.findAllByEmployeeId(employee_id);
+								map.put("status", "success");
+								map.put("data", customers);
+								resp = new ResponseEntity<>(map, HttpStatus.OK);
+							} catch (Exception e) {
+								System.err.println("Exception : " + e.getMessage());
+								map.put("status", "error");
+								map.put("error", "Customers Not Found");
+								resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+							}
+							
+					           return resp; 
+							
+						}
+			
+		
+		// ---------------------------------------------------------------------------
+		// Delete Customer
+		// ---------------------------------------------------------------------------
+
+		@DeleteMapping("/deleteCustomer/{id}")
+		public ResponseEntity<?> deleteCustomer(@PathVariable(value = "id") int employee_id) throws Exception {
+			
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
 			
 			
+			Customer customer = null;
+			customer = customerDao.findById(employee_id)
+					.orElseThrow(() -> new Exception("Customer not found for this id :: " + employee_id));
+
+			if(customer != null)
+			{
+				userService.deleteUser(customer.getEmail());
+				customerDao.delete(customer);
+				map.put("status", "success");
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			}else
+			{
+				map.put("status", "error");
+				map.put("error", "Customer Not Found");
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+			
+			return resp;
+		}
+
+		// ---------------------------------------------------------------------------
+		// Edit Customer
+		// ---------------------------------------------------------------------------
+
+		
+		
+		@PutMapping("/editCustomer/{id}")
+		public ResponseEntity<?> updateCustomer(@PathVariable(value = "id") int employee_id,
+				@Valid @RequestBody Customer customerDetails) throws Exception {
+		
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			customerDetails.setId(employee_id);
+			
+
+			if(customerDao.save(customerDetails) != null)
+			{
+				map.put("status", "success");
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			}else
+			{
+				map.put("status", "error");
+				map.put("error", "Student Not Found");
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+				
+			}
+			
+			return resp;
+		}
+		
+		
+
+		// --------------------------------------------------------------------------------------------------------------
+		
+		// ---------------------------------------------------------------------------
+			// Block/Unblock customer
+			// ---------------------------------------------------------------------------
+			
+			  @PutMapping("/blockCustomer/{id}") 
+			  public ResponseEntity<?> BlockCustomer(@PathVariable(value = "id") int customer_Id) throws Exception { 
+				 Customer customer =   customerService.findById(customer_Id); 
+				  ResponseEntity<?> resp = null;
+					Map<String, Object> map = new HashMap<String, Object>();
+				  if(userService.deactivateUser(customer.getEmail()) != null)
+				  {
+						map.put("status", "success");
+						resp = new ResponseEntity<>(map, HttpStatus.OK);
+					  
+				  }else
+				  {
+					  map.put("status", "error");
+						map.put("error", "Customer Not Found");
+						resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+					  
+				  }
+				  return resp; 
+			  
+			  
+			  
+			  }
+			  
+			   
+			  @PutMapping("/unblockCustomer/{id}") 
+			  public ResponseEntity<?> UnBlockCustomer(@PathVariable(value = "id") int customer_Id) throws Exception { 
+				 Customer customer =   customerService.findById(customer_Id); 
+				  ResponseEntity<?> resp = null;
+					Map<String, Object> map = new HashMap<String, Object>();
+				  if(userService.activateUser(customer.getEmail()) != null)
+				  {
+						map.put("status", "success");
+						resp = new ResponseEntity<>(map, HttpStatus.OK);
+					  
+				  }else
+				  {
+					  map.put("status", "error");
+						map.put("error", "Customer Not Found");
+						resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+					  
+				  }
+				  return resp; 	  
+			  }
+			// --------------------------------------------------------------------------------------------------------------
+		
 			
 	// ---------------------------------------------------------------------------
 	// List of all Feedback

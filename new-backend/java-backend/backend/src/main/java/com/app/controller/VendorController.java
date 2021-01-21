@@ -167,7 +167,32 @@ public class VendorController {
 		
 		return resp; 
 	}
+	
+	@GetMapping("/employeeList")
+	public ResponseEntity<?> fetchAllEmployees() {
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		System.out.println("in fetch all vendor");
 
+		
+		
+		
+		try {
+			List<Employee> employees = employeeDao.findAll();
+			map.put("status", "success");
+			map.put("data", employees);
+			resp = new ResponseEntity<>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			resp = new ResponseEntity<>(map, HttpStatus.NO_CONTENT);
+		}
+		
+		return resp; 
+	}
+
+	
 	// ---------------------------------------------------------------------------
 		//  Employee of id
 		// ---------------------------------------------------------------------------
@@ -370,6 +395,9 @@ public class VendorController {
            return resp; 
 		
 	}
+	
+	
+	
 	
 	// ---------------------------------------------------------------------------
 		//  Customer by id

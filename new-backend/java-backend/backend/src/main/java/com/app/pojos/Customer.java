@@ -58,7 +58,7 @@ public class Customer {
 
 	@Column(length = 50)
 	@JsonProperty("employee_id")
-	private int employee_id ;
+	private int employeeId ;
 
 	
 	@OneToMany(mappedBy = "customerId", fetch = FetchType.EAGER)
@@ -149,11 +149,40 @@ public class Customer {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+
+	public int getEmployeeId() {
+		return employeeId;
+	}
+
+
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public List<ServiceRequest> getRequest_list() {
+		return request_list;
+	}
+
+
+	public void setRequest_list(List<ServiceRequest> request_list) {
+		this.request_list = request_list;
+	}
+
+	
+	
 	
 	
 	/* ================================ toString =============================== */
 
 	
+
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", name=" + name + ", birthDate=" + birthDate + ", contact=" + contact
+				+ ", address=" + address + ", email=" + email + ", password=" + password + ", employeeId=" + employeeId
+				+ ", request_list=" + request_list + "]";
+	}
 
 	
 

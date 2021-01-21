@@ -205,15 +205,7 @@ public class AdminController {
 	// Delete vendor
 	// ---------------------------------------------------------------------------
 
-	/*
-	 * @DeleteMapping("/deletevendor/{id}") public Map<String, Boolean>
-	 * deleteVendor(@PathVariable(value = "id") int vendor_Id) throws Exception {
-	 * Vendor vendor = vendorDao.findById(vendor_Id) .orElseThrow(() -> new
-	 * Exception("Vendor not found for this id :: " + vendor_Id));
-	 * 
-	 * vendorDao.delete(vendor); Map<String, Boolean> response = new HashMap<>();
-	 * response.put("deleted", Boolean.TRUE); return response; }
-	 */
+	
 	
 	@DeleteMapping("/deleteVendor/{id}")
 	public ResponseEntity<?> deleteVendor(@PathVariable int id) {
@@ -252,34 +244,7 @@ public class AdminController {
 	// Edit vendor
 	// ---------------------------------------------------------------------------
 
-	/*@PutMapping("/editVendor/{id}")
-	public ResponseEntity<?> updateVendor(@PathVariable(value = "id") int vendor_Id,
-			@Valid @RequestBody Vendor vendorDetails) throws RecordNotFoundException {
-		ResponseEntity<?> resp = null;
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		Vendor vendor = null;
-		vendor = vendorDao.findById(vendor_Id)
-				.orElseThrow(() -> new RecordNotFoundException("Vendor not found for this id :: " + vendor_Id));
-
-		if(vendor != null)
-		{
-			vendor.setEmail(vendorDetails.getEmail());
-			vendor.setName(vendorDetails.getName());
-			final Vendor updatedVendor = vendorDao.save(vendor);
-			
-			map.put("status", "success");
-			resp = new ResponseEntity<>(map, HttpStatus.OK);
-		}else
-		{
-			map.put("status", "error");
-			map.put("error", "Student Not Found");
-			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-		}		
-		
-		return resp;
-		
-	}*/
+	
 	
 	@PutMapping("/editVendor/{id}")
 	public ResponseEntity<?> updateVendor(@PathVariable(value = "id") int vendor_Id,
@@ -359,8 +324,7 @@ public class AdminController {
 	  }
 	  
 	  
-	 
-
+	
 	// --------------------------------------------------------------------------------------------------------------
 	// *************************Offer-Management****************************************************************
 	// ---------------------------------------------------------------------------------------------------------------

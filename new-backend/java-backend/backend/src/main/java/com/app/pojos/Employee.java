@@ -57,7 +57,7 @@ public class Employee {
 	@JsonProperty("vendor_id")
 	private int vendorId;
 	
-	@OneToMany(mappedBy = "employee_id", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "employeeId", cascade = CascadeType.PERSIST)
 	private List<Customer> customers = new ArrayList<>();
 	
 

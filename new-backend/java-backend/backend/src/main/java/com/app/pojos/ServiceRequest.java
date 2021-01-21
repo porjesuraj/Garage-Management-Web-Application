@@ -71,7 +71,7 @@ public class ServiceRequest {
 	private double labourCharges = 0.0; 
 	
 	@JsonProperty("discount")
-	private double discount = 0.0; 
+	private double discount = 1.0; 
 	
 	@JsonProperty("product_charges")
 	private double productCharges = 0.0; 

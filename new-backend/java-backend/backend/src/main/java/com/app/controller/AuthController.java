@@ -20,10 +20,12 @@ import com.app.customException.UserDeactivateException;
 import com.app.model.LoginCredentials;
 import com.app.pojos.Admin;
 import com.app.pojos.Customer;
+import com.app.pojos.Employee;
 import com.app.pojos.User;
 import com.app.pojos.Vendor;
 import com.app.service.AdminService;
 import com.app.service.CustomerService;
+import com.app.service.EmployeeService;
 import com.app.service.UserService;
 import com.app.service.VendorService;
 import com.app.utils.JwtTokenUtil;
@@ -44,6 +46,10 @@ public class AuthController {
 	
 	@Autowired
 	VendorService vendorService;
+	
+	@Autowired
+	EmployeeService employeeService;
+	
 	
 	@Autowired
 	CustomerService customerService; 
@@ -86,16 +92,36 @@ public class AuthController {
 	    claims.put("email", foundedUser.getEmail());
 		claims.put("role", foundedUser.getRole());
 		
-		
-		
+	
 		final String token = jwtTokenUtil.generateToken(claims);
 
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		int id = 0;
+		if(foundedUser.getRole().equals("ADMIN"))
+		{
+			Admin admin = adminService.getByEmailId(foundedUser.getEmail());
+			id = admin.getId();
+		}else if(foundedUser.getRole().equals("VENDOR"))
+		{
+			Vendor vendor = vendorService.getByEmailId(foundedUser.getEmail());
+			id = vendor.getId();
+		}else if(foundedUser.getRole().equals("EMPLOYEE"))
+		{
+			Employee employee = employeeService.getByEmailId(foundedUser.getEmail());
+			id = employee.getId();
+		}else if(foundedUser.getRole().equals("CUSTOMER"))
+		{
+			Customer customer = customerService.getByEmailId(foundedUser.getEmail());
+			id = customer.getId();
+		}else
+		{
+			
+		}
 		map.put("status", "success");
 		map.put("token", token);
 		map.put("role", foundedUser.getRole());
         map.put("email", foundedUser.getEmail());
+        map.put("id", id);
 		ResponseEntity<?> resp = new ResponseEntity<>(map, HttpStatus.OK);
 		return resp;
 	}

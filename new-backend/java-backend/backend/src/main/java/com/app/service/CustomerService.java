@@ -27,4 +27,9 @@ public class CustomerService {
 		return customerDao.save(newCustomer);
 	}
 	
+	public Customer getByEmailId(String email) {
+		
+          return customerDao.findByEmail(email);
+	}
+	
 }

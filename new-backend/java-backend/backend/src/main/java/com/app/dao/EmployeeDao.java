@@ -10,6 +10,9 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
 
 	Employee findByEmailAndPassword(String email, String password);
 	
+	
+	Employee findByEmail(String email);
+	
 	List<Employee> findAllByVendorId(int vendorId); 
 
 }

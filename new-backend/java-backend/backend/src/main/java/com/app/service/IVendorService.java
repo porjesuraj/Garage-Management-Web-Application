@@ -9,7 +9,7 @@ public interface IVendorService {
 	Vendor addVendor(Vendor newVendor);
 	
 Vendor findById(int id);
-	
+Vendor getByEmailId(String email);
 void deleteVendor(int id);
 	
 }

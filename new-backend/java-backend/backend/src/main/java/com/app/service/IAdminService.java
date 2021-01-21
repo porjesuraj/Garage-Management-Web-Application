@@ -7,4 +7,6 @@ public interface IAdminService {
 	Admin addAdmin(Admin newAdmin);
 	
 	Admin findById(int id);
+	
+	Admin getByEmailId(String emailId);
 }

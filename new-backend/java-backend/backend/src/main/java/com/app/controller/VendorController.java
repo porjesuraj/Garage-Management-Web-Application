@@ -90,6 +90,32 @@ public class VendorController {
 				
 				
 			}
+			
+			// ---------------------------------------------------------------------------
+			// vendor by id
+			// ---------------------------------------------------------------------------
+			            @GetMapping("/byEmail/{emailId}")
+						public ResponseEntity<?> getVendorByEmailId(@PathVariable String emailId) 		
+						{
+							ResponseEntity<?> resp = null;
+							Map<String, Object> map = new HashMap<String, Object>();	
+							System.out.println("in fetch  vendor");	
+							try {	
+								Vendor vendor = vendorService.getByEmailId(emailId);
+
+								map.put("status", "success");
+								map.put("data", vendor);
+								resp = new ResponseEntity<>(map, HttpStatus.OK);					
+							} catch (Exception e) {
+								System.err.println("Exception : " + e.getMessage());
+								map.put("status", "error");
+								map.put("error", e.getMessage());
+								resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+							}	
+							return resp;
+							
+							
+						}	
 		
 	
 	// --------------------------------------------------------------------------------------------------------------
@@ -99,15 +125,37 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 	// List of all Employee
 	// ---------------------------------------------------------------------------
-	@GetMapping("/employeeList/{vendorId}")
-	public ResponseEntity<?> fetchAllEmployees(@PathVariable int vendorId) {
+	
+	   @GetMapping("/employeeList/{vendorId}") public ResponseEntity<?>
+	  fetchAllEmployees(@PathVariable int vendorId) { ResponseEntity<?> resp =
+	 null; Map<String, Object> map = new HashMap<String, Object>();
+	  
+	 System.out.println("in fetch all vendor");
+	 
+	 
+	 
+	 try { List<Employee> employees = employeeDao.findAllByVendorId(vendorId);
+	  map.put("status", "success"); map.put("data", employees); resp = new
+	  ResponseEntity<>(map, HttpStatus.OK); } catch (Exception e) {
+	  System.err.println("Exception : " + e.getMessage()); map.put("status",
+	 "error"); resp = new ResponseEntity<>(map, HttpStatus.NO_CONTENT); }
+	  
+	  return resp; }
+	 
+			            
+			            
+	@GetMapping("/employeeList/byEmail/{vendorEmail}")
+	public ResponseEntity<?> fetchAllEmployees(@PathVariable String vendorEmail) {
 		ResponseEntity<?> resp = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		System.out.println("in fetch all vendor");
 
+		Vendor vendor = vendorService.getByEmailId(vendorEmail);
+		
+		
 		try {
-			List<Employee> employees = employeeDao.findAllByVendorId(vendorId);
+			List<Employee> employees = employeeDao.findAllByVendorId(vendor.getId());
 			map.put("status", "success");
 			map.put("data", employees);
 			resp = new ResponseEntity<>(map, HttpStatus.OK);

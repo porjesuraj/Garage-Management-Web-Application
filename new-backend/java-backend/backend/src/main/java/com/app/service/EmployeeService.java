@@ -45,4 +45,13 @@ public class EmployeeService {
 	{
 		return employeeDao.save(newEmployee); 
 	}
+	
+	public Employee getByEmailId(String emailId) {	
+		
+			return employeeDao.findByEmail(emailId);
+		
+	}
+	
+	
+	
 }

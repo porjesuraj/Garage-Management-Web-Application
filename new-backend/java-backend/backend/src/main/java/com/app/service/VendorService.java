@@ -58,6 +58,12 @@ public class VendorService implements IVendorService{
 		throw new RecordNotFoundException("vendor not found"); 
 		}
 	}
+
+	@Override
+	public Vendor getByEmailId(String email) {
+		
+		return vendorDao.findByEmail(email);
+	}
 	
 	
 }

@@ -31,4 +31,10 @@ public class AdminService implements IAdminService {
 	public Admin addAdmin(Admin newAdmin) {
 		return adminDao.save(newAdmin);
 	}
+
+	@Override
+	public Admin getByEmailId(String emailId) {
+		
+		return adminDao.findByEmail(emailId);
+	}
 }

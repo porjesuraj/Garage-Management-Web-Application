@@ -8,5 +8,6 @@ public interface VendorDao extends JpaRepository<Vendor, Integer> {
 
 	Vendor findByEmailAndPassword(String email,String password); 
 	
+	Vendor findByEmail(String email); 
 	
 }

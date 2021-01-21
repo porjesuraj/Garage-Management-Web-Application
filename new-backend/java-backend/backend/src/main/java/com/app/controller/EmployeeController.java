@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dao.CustomerDao;
 import com.app.dao.EmployeeDao;
 import com.app.dao.FeedbackDao;
+import com.app.dao.StockDao;
 import com.app.pojos.Customer;
 import com.app.pojos.Employee;
 import com.app.pojos.Feedback;
@@ -43,6 +45,15 @@ public class EmployeeController {
 	@Autowired
 	private FeedbackDao feedbackDao;
 	
+	
+	@Autowired
+	private CustomerDao customerDao;
+
+	
+	@Autowired
+	private StockDao stockDao; 
+	
+	
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -58,20 +69,7 @@ public class EmployeeController {
 		System.out.println("in ctor of " + getClass().getName());
 	}
 
-	// ---------------------------------------------------------------------------
-	// Signin vendor
-	// ---------------------------------------------------------------------------
-
-	/*
-	 * @PostMapping("/signin") public Employee
-	 * authenticateEmployee(@Valid @RequestBody Employee employee) {
-	 * 
-	 * // System.out.println(email + password); Employee v =
-	 * employeeDao.findByEmailAndPassword(employee.getEmail(),
-	 * employee.getPassword());
-	 * 
-	 * if (v != null) return v; else return null; }
-	 */
+	
 	// ---------------------------------------------------------------------------
 	// Get Profile
 	// ---------------------------------------------------------------------------
@@ -104,21 +102,7 @@ public class EmployeeController {
 	// ---------------------------------------------------------------------------
 	// Update Profile Profile
 	// ---------------------------------------------------------------------------
-	/*@PutMapping("/editEmployee/{id}")
-	public ResponseEntity<?> updateEmployee(@PathVariable(value = "id") int employee_id,
-			@Valid @RequestBody Employee employeeDetails) throws Exception {
-		ResponseEntity<?> resp = null;
-		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println("in update employee profile");
-
-		Employee employee = employeeDao.findById(employee_id)
-				.orElseThrow(() -> new Exception("Employee not found for this id :: " + employee_id));
-
-		employee.setEmail(employeeDetails.getEmail());
-		employee.setPassword(employeeDetails.getPassword());
-		final Employee updatedEmployee = employeeDao.save(employee);
-		return ResponseEntity.ok(updatedEmployee);
-	}*/
+	
 	
 	@PutMapping("/editEmployee/{id}")
 	public ResponseEntity<?> updateEmployee(@PathVariable(value = "id") int employee_id,
@@ -264,7 +248,7 @@ public class EmployeeController {
 				  ServiceRequest request = null;
 				  request =  serviceRequestService.getByCustomerIdAndStatus(customer_id, "PENDING");
 				
-				
+			
 				
 				if(request != null)
 				{
@@ -272,7 +256,10 @@ public class EmployeeController {
 					request.setDiscount(serviceRequest.getDiscount());
 					request.setStatus("COMPLETED");
 					request.setLabourCharges(serviceRequest.getLabourCharges());
-					request.setTotal(serviceRequest.getTotal());
+					 
+					double discount = 1 - serviceRequest.getDiscount(); 
+					
+					request.setTotal((serviceRequest.getProductCharges() + serviceRequest.getLabourCharges()) * discount);
 					
 					 serviceRequestService.addServiceRequest(request); 
 					map.put("status", "success");
@@ -320,7 +307,7 @@ public class EmployeeController {
 	}
 	
 	//------------------------------------------------------------------------
-	// Add Service Request
+	// Add stock
 	//------------------------------------------------------------------
 	@PostMapping("/addStock")
 	public ResponseEntity<?> addStock(@Valid @RequestBody Stock newStock) {
@@ -343,9 +330,36 @@ public class EmployeeController {
 		return resp; 
 	}
 	
+//------------------------------------------------------------------------------------------------
+// Get All Stock
+//--------------------------------------------------------------------------------------------------
+	@GetMapping("/AllStock")
+	public ResponseEntity<?> getAllStock() 		
+	{
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();	
+		System.out.println("in vendor count");	
+		try {	
+			List<Stock> stocks = stockDao.findAll();
+			
+
+			map.put("status", "success");
+			map.put("data", stocks);
+			resp = new ResponseEntity<>(map, HttpStatus.OK);					
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", e.getMessage());
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+		return resp;
+		
+		
+	}	
+	
 	
 //------------------------------------------------------------------
-// update Service Status
+// update stock
 //-----------------------------------------------------------------
 	@PutMapping("/updateStock/{stock_id}")
 	public ResponseEntity<?> updateStock( @PathVariable int stock_id,@RequestBody Stock updatedStock) throws Exception {
@@ -386,6 +400,39 @@ public class EmployeeController {
 	
 	
 	
+	
+	
+	//------------------------------------------------------------------
+	// count
+	//-----------------------------------------------------------------
+	@GetMapping("/AllCount")
+	public ResponseEntity<?> getAllCount() 		
+	{
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();	
+		System.out.println("in vendor count");	
+		try {	
+			long stocks = stockDao.count();
+			long employees = employeeDao.count();
+			long customers = customerDao.count();
+			long feedbacks = feedbackDao.count();
+
+			map.put("status", "success");
+			map.put("stocks", stocks);
+			map.put("employees", employees);
+			map.put("customers", customers);
+			map.put("feedbacks", feedbacks); 
+			resp = new ResponseEntity<>(map, HttpStatus.OK);					
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", e.getMessage());
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+		return resp;
+		
+		
+	}
 	
 	
 	

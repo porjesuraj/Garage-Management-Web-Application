@@ -44,6 +44,8 @@ public class VendorController {
 	@Autowired
 	private FeedbackDao feedbackDao;
 	
+	@Autowired
+	private StockDao stockDao; 
 	
 	
 	@Autowired
@@ -89,14 +91,6 @@ public class VendorController {
 				
 			}
 		
-
-	
-	
-	
-	
-	
-	
-	
 	
 	// --------------------------------------------------------------------------------------------------------------
 	// ******************************Employee-Management***********************************************************
@@ -153,11 +147,7 @@ public class VendorController {
 	// ---------------------------------------------------------------------------
 	// Add Employee
 	// ---------------------------------------------------------------------------
-	/*
-	 * @PostMapping("/addEmployee") public Employee
-	 * createEmployee(@Valid @RequestBody Employee employee) { return
-	 * employeeDao.save(employee); }
-	 */
+	
 	
 	@PostMapping("/addEmployee")
 	public ResponseEntity<?> EMployeeSignup(@RequestBody  Employee newEmployee)  throws AuthenticationException {
@@ -229,6 +219,8 @@ public class VendorController {
 		{
 			employee.setEmail(employeeDetails.getEmail());
 			employee.setPassword(employeeDetails.getPassword());
+			employee.setName(employeeDetails.getName());
+			employee.setBirthDate(employeeDetails.getBirthDate());
 			final Employee updatedEmployee = employeeDao.save(employee);
 			map.put("status", "success");
 			resp = new ResponseEntity<>(map, HttpStatus.OK);
@@ -395,29 +387,7 @@ public class VendorController {
 	// Edit Customer
 	// ---------------------------------------------------------------------------
 
-	/* @PutMapping("/editCustomer/{id}")
-	public ResponseEntity<?> updateCustomer(@PathVariable(value = "id") int employee_id,
-			@Valid @RequestBody Customer customerDetails) throws Exception {
 	
-		ResponseEntity<?> resp = null;
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		Customer customer = null;
-		customer = customerDao.findById(employee_id)
-				.orElseThrow(() -> new Exception("Customer not found for this id :: " + employee_id));
-
-		if(customer != null)
-		{
-			customer.setEmail(customerDetails.getEmail());
-			customer.setPassword(customerDetails.getPassword());
-			final Customer updatedCustomer = customerDao.save(customer);
-		}else
-		{
-			
-		}
-		
-		return resp;
-	}  */
 	
 	@PutMapping("/editCustomer/{id}")
 	public ResponseEntity<?> updateCustomer(@PathVariable(value = "id") int employee_id,
@@ -549,6 +519,38 @@ public class VendorController {
 		
 		
 		return resp;
+	}
+	
+	// ---------------------------------------------------------------------------
+	// count 
+	// ---------------------------------------------------------------------------
+	@GetMapping("/AllCount")
+	public ResponseEntity<?> getAllCount() 		
+	{
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();	
+		System.out.println("in vendor count");	
+		try {	
+			long stocks = stockDao.count();
+			long employees = employeeDao.count();
+			long customers = customerDao.count();
+			long feedbacks = feedbackDao.count();
+
+			map.put("status", "success");
+			map.put("stocks", stocks);
+			map.put("employees", employees);
+			map.put("customers", customers);
+			map.put("feedbacks", feedbacks); 
+			resp = new ResponseEntity<>(map, HttpStatus.OK);					
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", e.getMessage());
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+		return resp;
+		
+		
 	}
 
 }

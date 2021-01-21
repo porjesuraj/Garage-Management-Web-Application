@@ -73,6 +73,8 @@ public class ServiceRequest {
 	@JsonProperty("discount")
 	private double discount = 0.0; 
 	
+	@JsonProperty("product_charges")
+	private double productCharges = 0.0; 
 	
 	@JsonProperty("total")
 	private double total = 0.0; 
@@ -89,11 +91,9 @@ public class ServiceRequest {
 	}
 
 	
-	
-
 	public ServiceRequest(int requestId, String vehicleType, String vehicleModel, String vehicleBrand,
 			String vehicleRegNo, LocalDate serviceDate, LocalDate outDate, String deliveryType, String status,
-			double labourCharges, double discount, double total) {
+			double labourCharges, double discount, double productCharges, double total) {
 		super();
 		this.requestId = requestId;
 		this.vehicleType = vehicleType;
@@ -106,27 +106,13 @@ public class ServiceRequest {
 		this.status = status;
 		this.labourCharges = labourCharges;
 		this.discount = discount;
+		this.productCharges = productCharges;
 		this.total = total;
 	}
-
-
-
-
-
-
-
 	//-----------------------------------------
 	// getter and setter
 	//------------------------------------------
 		
-
-
-
-
-
-
-
-
 
 
 
@@ -278,10 +264,24 @@ public class ServiceRequest {
 	public void setTotal(double total) {
 		this.total = total;
 	}
+	
+	
+	public double getProductCharges() {
+		return productCharges;
+	}
+
+
+	public void setProductCharges(double productCharges) {
+		this.productCharges = productCharges;
+	}
+
+	
 
 	//--------------------------------------
 	// to string
 	//-----------------------------------
+	
+
 	
 
 	@Override

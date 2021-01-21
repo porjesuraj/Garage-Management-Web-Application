@@ -95,7 +95,7 @@ public class AuthController {
 		map.put("status", "success");
 		map.put("token", token);
 		map.put("role", foundedUser.getRole());
-
+        map.put("email", foundedUser.getEmail());
 		ResponseEntity<?> resp = new ResponseEntity<>(map, HttpStatus.OK);
 		return resp;
 	}

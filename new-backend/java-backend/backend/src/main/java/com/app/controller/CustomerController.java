@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dao.CustomerDao;
+import com.app.dao.EmployeeDao;
 import com.app.dao.FeedbackDao;
+import com.app.dao.ServiceRequestDao;
+import com.app.dao.VendorDao;
 import com.app.pojos.Customer;
 import com.app.pojos.Feedback;
 import com.app.pojos.ServiceRequest;
@@ -31,6 +34,14 @@ public class CustomerController {
 
 	@Autowired
 	private CustomerDao customerDao;
+	@Autowired
+	private VendorDao vendorDao;
+	
+	@Autowired
+	private EmployeeDao employeeDao;
+	
+	@Autowired
+	private ServiceRequestDao serviceRequestDao;
 	
 	@Autowired
 	private CustomerService customerService; 
@@ -152,4 +163,37 @@ public class CustomerController {
 		
 		return resp;
 	}
+	
+	
+	// ---------------------------------------------------------------------------
+			// count 
+			// ---------------------------------------------------------------------------
+		@GetMapping("/AllCount")
+		public ResponseEntity<?> getAllCount() 		
+		{
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();	
+			System.out.println("in vendor count");	
+			try {	
+				long vendors = vendorDao.count();
+				long employees = employeeDao.count();
+				long customers = customerDao.count();
+				long serviceRequest = serviceRequestDao.count();
+
+				map.put("status", "success");
+				map.put("vendors", vendors);
+				map.put("employees", employees);
+				map.put("customers", customers);
+				map.put("serviceRequest", serviceRequest); 
+				resp = new ResponseEntity<>(map, HttpStatus.OK);					
+			} catch (Exception e) {
+				System.err.println("Exception : " + e.getMessage());
+				map.put("status", "error");
+				map.put("error", e.getMessage());
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}	
+			return resp;
+			
+			
+		}
 }

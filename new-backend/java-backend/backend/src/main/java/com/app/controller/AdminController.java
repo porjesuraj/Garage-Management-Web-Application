@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.customException.RecordNotFoundException;
 import com.app.dao.AdminDao;
+import com.app.dao.CustomerDao;
+import com.app.dao.EmployeeDao;
+import com.app.dao.FeedbackDao;
 import com.app.dao.OfferDao;
 import com.app.dao.VendorDao;
 import com.app.pojos.Admin;
@@ -38,15 +41,28 @@ import com.app.service.VendorService;
 public class AdminController {
 
 	@Autowired
+	private AdminDao adminDao;
+	
+	
+	@Autowired
 	private VendorDao vendorDao;
+	
+	@Autowired
+	private EmployeeDao employeeDao;
+	
+	@Autowired
+	private CustomerDao customerDao;
+	
+	@Autowired 
+	private FeedbackDao feedbackDao;
+	
 
 	
 	@Autowired
 	private VendorService vendorService; 
 	
 	
-	@Autowired
-	private AdminDao adminDao;
+
 	
 	@Autowired 
 	private AdminService adminService; 
@@ -460,4 +476,38 @@ public class AdminController {
 		
 		return resp;
 	}
+	
+	// ---------------------------------------------------------------------------
+		// count 
+		// ---------------------------------------------------------------------------
+	@GetMapping("/AllCount")
+	public ResponseEntity<?> getAllCount() 		
+	{
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();	
+		System.out.println("in vendor count");	
+		try {	
+			long vendors = vendorDao.count();
+			long employees = employeeDao.count();
+			long customers = customerDao.count();
+			long feedbacks = feedbackDao.count();
+
+			map.put("status", "success");
+			map.put("vendors", vendors);
+			map.put("employees", employees);
+			map.put("customers", customers);
+			map.put("feedbacks", feedbacks); 
+			resp = new ResponseEntity<>(map, HttpStatus.OK);					
+		} catch (Exception e) {
+			System.err.println("Exception : " + e.getMessage());
+			map.put("status", "error");
+			map.put("error", e.getMessage());
+			resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+		return resp;
+		
+		
+	}
+	
+	
 }

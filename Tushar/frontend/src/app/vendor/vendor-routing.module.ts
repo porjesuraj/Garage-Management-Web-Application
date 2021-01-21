@@ -1,3 +1,4 @@
+import { CustomerListComponent } from './customer-list/customer-list.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { EmployeeAddComponent } from './employee-add/employee-add.component';
 import { HomeComponent } from './../vendor/home/home.component';
@@ -8,6 +9,8 @@ const routes: Routes = [
   {path : 'home', component : HomeComponent},
   {path : 'employee-add', component : EmployeeAddComponent},
   {path : 'employee-list', component : EmployeeListComponent},
+  {path : 'customer-list', component : CustomerListComponent},
+
 ];
 
 @NgModule({

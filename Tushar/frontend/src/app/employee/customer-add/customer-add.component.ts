@@ -1,28 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { VendorService } from '../vendor.service';
+import { EmployeeService } from '../employee.service';
 import { Location } from '@angular/common';
 
 
 @Component({
-  selector: 'app-employee-add',
-  templateUrl: './employee-add.component.html',
-  styleUrls: ['./employee-add.component.css']
+  selector: 'app-customer-add',
+  templateUrl: './customer-add.component.html',
+  styleUrls: ['./customer-add.component.css']
 })
-export class EmployeeAddComponent implements OnInit {
+export class CustomerAddComponent implements OnInit {
 
   name=''
   email=''
   password=''
   birth_date
-  vendor_id
+  employee_id
+  contact
+  address
 
-  employee=null
+  customer=null
 
   constructor(
     private location:Location,
     private router:Router,
-    private vendorService:VendorService,
+    private employeeService:EmployeeService,
     private activatedRoute: ActivatedRoute,
 
   ) { }
@@ -34,12 +36,12 @@ export class EmployeeAddComponent implements OnInit {
 
   onSave(){
 
- this.vendorService.addEmployee(this.name,this.email,this.password,this.birth_date,this.vendor_id).subscribe(response=>{
+ this.employeeService.addCustomer(this.name,this.email,this.password,this.birth_date,this.employee_id,this.address,this.contact).subscribe(response=>{
       if(response['status']=='success'){
-        this.router.navigate(['/vendor/employee-list'])
+        this.router.navigate(['/employee/customer-list'])
       }else{
         console.log(response['error'])
-        window.alert("Employee is already Used")
+        window.alert("Customer is already Used")
       }
     })
   }
@@ -49,21 +51,21 @@ export class EmployeeAddComponent implements OnInit {
 
   onUpdate() {
 
-    if (this.employee) {
+    if (this.customer) {
       // edit
-      this.vendorService
-        .updateEmployee(this.employee['id'], this.name, this.email, this.password, this.birth_date, this.vendor_id)
+      this.employeeService
+        .updateCustomer(this.customer['id'], this.name, this.email, this.password, this.birth_date, this.employee_id,this.address,this.contact)
         .subscribe(response => {
           if (response['status'] == 'success') {
-            this.router.navigate(['/vendor/employee-list'])
+            this.router.navigate(['/employee/customer-list'])
           }
         })
     } else {
       // insert
-      this.vendorService.addEmployee(this.name, this.email, this.password, this.birth_date, this.vendor_id)
+      this.employeeService.addCustomer(this.name, this.email, this.password, this.birth_date, this.employee_id,this.address,this.contact)
         .subscribe(response => {
           if (response['status'] == 'success') {
-            this.router.navigate(['/vendor/employee-list'])
+            this.router.navigate(['/employee/customer-list'])
           }
         })
     }
@@ -73,16 +75,19 @@ export class EmployeeAddComponent implements OnInit {
    getPreFilledValues(id:number){
  
     if(id>0){
-      this.vendorService.getEmployeeDetails(id).subscribe(response => {
+      this.employeeService.getCustomerDetails(id).subscribe(response => {
         if (response['status'] == 'success') {
          
             this.name = response['data']['name']
             this.email = response['data']['email']
             this.password = response['data']['password']
             this.birth_date = response['data']['birth_date']
-            this.vendor_id = response['data']['vendor_id']
+            this.employee_id = response['data']['employee_id']
+            this.address = response['data']['address']
+.            this.contact = response['data']['contact']
+
             
-            this.employee = response['data']
+            this.customer = response['data']
             console.log(id);
             
           }

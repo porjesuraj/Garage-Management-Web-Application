@@ -1,14 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { EmployeeRoutingModule } from './employee-routing.module';
+import { HomeComponent } from './home/home.component';
+import { CustomerAddComponent } from './customer-add/customer-add.component';
+import { CustomerListComponent } from './customer-list/customer-list.component';
+import { CustomerRoutingModule } from '../customer/customer-routing.module';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [HomeComponent, CustomerAddComponent, CustomerListComponent],
   imports: [
     CommonModule,
-    EmployeeRoutingModule
+    CustomerRoutingModule,
+    FormsModule,
+    HttpClientModule
   ]
 })
 export class EmployeeModule { }

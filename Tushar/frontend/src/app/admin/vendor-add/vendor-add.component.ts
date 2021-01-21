@@ -28,25 +28,8 @@ export class VendorAddComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-   // const id = this.activatedRoute.snapshot.queryParams['id']
-    const id = this.activatedRoute.snapshot.paramMap.get('id')
-
-    if (id) {
-      // edit product
-      this.adminService.getVendorDetails(id).subscribe(response => {
-          if (response['status'] == 'success') {
-            let vendors = response['data']
-            if (vendors.length > 0) {
-              this.vendor = vendors[0]
-              this.name = this.vendor['name']
-              this.email = this.vendor['email']
-              this.password = this.vendor['password']
-              this.address = this.vendor['address']
-              this.contact = this.vendor['contact']
-            }
-          }
-        })
-    } 
+    const id = this.activatedRoute.snapshot.queryParams['id']
+    this.getPreFilledValues(id)
   }
 
   onSave(){
@@ -72,7 +55,7 @@ export class VendorAddComponent implements OnInit {
         .updateVendor(this.vendor['id'], this.name, this.email, this.password, this.address, this.contact)
         .subscribe(response => {
           if (response['status'] == 'success') {
-            this.router.navigate(['/vendor-list'])
+            this.router.navigate(['/admin/vendor-list'])
           }
         })
     } else {
@@ -80,23 +63,42 @@ export class VendorAddComponent implements OnInit {
       this.adminService.addVendor(this.name, this.email, this.password, this.address, this.contact)
         .subscribe(response => {
           if (response['status'] == 'success') {
-            this.router.navigate(['/vendor-list'])
+            this.router.navigate(['/admin/vendor-list'])
           }
         })
     }
 
   }
 
-/*   getPreFilledValues(){
-    const id = this.activatedRoute.snapshot.paramMap.get('id')
-    this.adminService.getVendorDetails(id).subscribe(response=>{
-      if(response['status']=='success'){
-        this.name = ++response['data']['name'] 
-        this.email = ++response['data']['email']
-        this.password = ++response['data']['password']
-        this.address = ++response['data']['address']
-        this.contact = ++response['data']['contact']
-      }
-    })
-  } */
+  getPreFilledValues(id:number){
+ 
+    if(id>0){
+      this.adminService.getVendorDetails(id).subscribe(response => {
+        if (response['status'] == 'success') {
+         
+            this.name = response['data']['name']
+            this.email = response['data']['email']
+            this.password = response['data']['password']
+            this.address = response['data']['address']
+            this.contact = response['data']['contact']
+            
+            this.vendor = response['data']
+            console.log(id);
+            
+          }
+      
+      })
+    }
+    else {
+
+   }
+  }
+
+  onLogout(){
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('role')
+
+    this.router.navigate(['/auth/login'])
+  }
+
 }

@@ -24,7 +24,19 @@ export class VendorService {
     return this.httpClient.get(this.url+"/employeeList", httpOptions)
   }
 
-  updateEmployee(id, name: string, email: string, password: string, address: string, contact: string) {
+  getCustomers(){
+
+    const httpOptions = {
+     headers: new HttpHeaders({
+       token: sessionStorage['token']
+     })
+   };
+   
+   return this.httpClient.get(this.url+"/Customerlist", httpOptions)
+ }
+
+
+  updateEmployee(id, name: string, email: string, password: string, birth_date: string, vendor_id: string) {
 
     const httpOptions = {
      headers: new HttpHeaders({
@@ -36,13 +48,13 @@ export class VendorService {
     name: name,
     email: email,
     password: password,
-    address: address,
-    contact: contact
+    birth_date: birth_date,
+    vendor_id: vendor_id
   }
   return this.httpClient.put(this.url + `/editEmployee/${id}`, body, httpOptions)
   }
 
-  addEmployee(name: string, email: string, password: string, address: string, contact: string) {
+  addEmployee(name: string, email: string, password: string, birth_date: Date, vendor_id: number) {
     // add the token in the request header
     const httpOptions = {
       headers: new HttpHeaders({
@@ -53,12 +65,12 @@ export class VendorService {
       name: name,
       email: email,
       password: password,
-      address: address,
-      contact: contact
+      birth_date: birth_date,
+      vendor_id: vendor_id
     }
     return this.httpClient.post(this.url + "/addEmployee" , body, httpOptions)
     }
-    
+   
     getEmployeeDetails(id) {
       // add the token in the request header
       const httpOptions = {
@@ -76,6 +88,15 @@ export class VendorService {
         })
       };
       return this.httpClient.delete(this.url+`/deleteEmployee/${id}`,httpOptions)
+    }
+
+    deleteCustomer(id){
+      const httpOptions = {
+        headers: new HttpHeaders({
+          token: sessionStorage['token']
+        })
+      };
+      return this.httpClient.delete(this.url+`/deleteCustomer/${id}`,httpOptions)
     }
 
 

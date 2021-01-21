@@ -71,5 +71,13 @@ export class EmployeeListComponent implements OnInit {
       }
     })
   }
+
+
+  onLogout(){
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('role')
+
+    this.router.navigate(['/auth/login'])
+  }
 }
 

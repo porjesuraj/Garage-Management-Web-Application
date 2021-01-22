@@ -306,10 +306,10 @@ public ResponseEntity<?> getCustomerServiceRequestById(@PathVariable int custome
 				if(request != null)
 				{
 					request.setOutDate(serviceRequest.getOutDate());
-					request.setDiscount(serviceRequest.getDiscount());
+					request.setDiscount(serviceRequest.getDiscount()*100);
 					request.setStatus("COMPLETED");
 					request.setLabourCharges(serviceRequest.getLabourCharges());
-					 
+					 request.setProductCharges(serviceRequest.getProductCharges());
 					double discount = 1 - serviceRequest.getDiscount(); 
 					
 					request.setTotal((serviceRequest.getProductCharges() + serviceRequest.getLabourCharges()) * discount);
@@ -635,11 +635,6 @@ public ResponseEntity<?> getCustomerServiceRequestById(@PathVariable int custome
 		              Stock newStock = null; 
 		              newStock =  stockService.getById(stock_id); 
 		  
-		              
-		  
-		
-		
-		
 		
 		if(newStock != null)
 		{
@@ -665,7 +660,38 @@ public ResponseEntity<?> getCustomerServiceRequestById(@PathVariable int custome
 	
 	
 	
-	
+	// ---------------------------------------------------------------------------
+			// Delete Customer
+			// ---------------------------------------------------------------------------
+
+			@DeleteMapping("/deleteStock/{id}")
+			public ResponseEntity<?> deleteStock(@PathVariable(value = "id") int stock_id) throws Exception {
+				
+				ResponseEntity<?> resp = null;
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				
+				Stock stock = null;
+				stock = stockDao.findById(stock_id) 
+						.orElseThrow(() -> new Exception("stock not found for this id :: " + stock_id));
+
+				if(stock != null)
+				{
+					stockDao.delete(stock);
+					
+					map.put("status", "success");
+					resp = new ResponseEntity<>(map, HttpStatus.OK);
+				}else
+				{
+					map.put("status", "error");
+					map.put("error", "Customer Not Found");
+					resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				
+				
+				return resp;
+			}
+
 	
 	//------------------------------------------------------------------
 	// count

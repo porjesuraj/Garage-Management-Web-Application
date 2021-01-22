@@ -1,0 +1,36 @@
+<div class="row main-content" style="position: absolute;">
+  <div class="col-md-1"></div>
+  <div class="col-md-10 login-container">
+
+    <div>
+      <img src="assets/img-01.png" alt="IMG">
+    </div>
+
+    <form class="form">
+      <span class="form-title">
+        Member Login
+      </span>
+
+      <div class="form-input">
+        <input [(ngModel)]="email" class="input" type="text" name="email" placeholder="Email">
+        <span class="focus-input"></span>
+      </div>
+
+      <div class="form-input">
+        <input [(ngModel)]="password" class="input" type="password" name="pass" placeholder="Password">
+        <span class="focus-input"></span>
+      </div>
+
+      <div class="container-login-form-btn">
+        <button (click)="onLogin()" class="login-form-btn"> Login </button>
+      </div>
+
+      <div class="text-center">
+        <div>Don't have account?</div>
+        <a class="txt2" routerLink="/auth/signup"> Create your Account </a>
+      </div>
+    </form>
+
+  </div>
+  <div class="col-md-1"></div>
+</div>

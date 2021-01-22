@@ -1,0 +1,166 @@
+<section class="header">
+  <div class="row header-div">
+
+    <div class="logo col-md-1">
+      <a routerLink="/home/"> <img src="../../../assets/logo.png" alt=""></a>
+    </div>
+
+    <div class="col-md-11">
+
+      <h2 class="project-name" style="text-align: center;"> Garage Management System </h2>
+
+      <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+        <div class="container-fluid">
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a routerLink="/home" class="nav-link">Home</a>
+              </li>
+              <li class="nav-item" style="margin-left: 50px;">
+                <a routerLink="/home/about-us" class="nav-link">About us</a>
+              </li>
+              <li class="nav-item" style="margin-left: 50px;">
+                <a routerLink="/home/faqs" class="nav-link">Faqs</a>
+              </li>
+              <li class="nav-item" style="margin-left: 50px;">
+                <a routerLink="/home/contact-us" class="nav-link">Contact us</a>
+              </li>
+              <li class="nav-item" style="margin-left: 50px;">
+                <a routerLink="/auth/login" class="nav-link">Login</a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </nav>
+
+    </div>
+  </div>
+</section>
+
+<section class="main-content">
+  <div class="container-fluid">
+
+    <div class="row half-main-container" style="height: 600px;">
+
+      <div class="col-md-4 half-container HC-1">
+        <h2 class="registered-office"> Registerd Office </h2>
+        <p class="content"> F-110 | Sai  Empire,</p>
+        <p class="content"> College Road, Nashik </p>
+        <p class="content"> Maharashtra </p>
+        <p class="content"> India - 422004</p>
+        <p class="content"> Email: info@gms.com</p>
+        <div class="social">
+          <ul class="social-ul">
+            <li class="social-li">
+              <span>
+                <a href="https://www.facebook.com/"> <img class="contact-social-logo" src="assets/facebook.svg" alt=""> </a>
+              </span>
+            </li>
+            <li class="social-li">
+              <span>
+                <a href="https://twitter.com/?lang=en"><img class="contact-social-logo" src="assets/twitter.svg" alt=""></a>
+              </span>
+            </li>
+            <li class="social-li">
+              <span>
+                <a href="https://www.instagram.com/"><img class="contact-social-logo" src="assets/instagram.svg" alt=""></a>
+              </span>
+            </li>
+            <li class="social-li">
+              <span>
+                <a href="https://www.youtube.com/"><img class="contact-social-logo" src="assets/youtube.svg" alt=""></a>
+              </span>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="col-md-4 half-container HC-2">
+        <img src="assets/map.jpg" alt="" class="map">
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+
+<section class="footer">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-3">
+        <ul>
+          <li class="footer-text" style="font-weight: bolder">| OFFICE |</li>
+          <li><span class="footer-text">Address line 1</span></li>
+          <li><span class="footer-text">Address line 2</span></li>
+          <li><span class="footer-text">Address line 3</span></li>
+          <li><span class="footer-text">Address line 4</span></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3">
+        <ul>
+          <li class="footer-text" style="font-weight: bolder">| CONTACT US |</li>
+          <li><span class="footer-text">+9876543210</span></li>
+          <li><span class="footer-text">+1234567890</span></li>
+          <li><span class="footer-text">info@gms.com</span></li>
+          <li><span class="footer-text">contact@gms.com</span></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3">
+        <ul>
+          <li class="footer-text" style="font-weight: bolder">| KNOW MORE |</li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3">
+        <ul>
+          <li class="footer-text" style="font-weight: bolder">| GET LATEST NEWS |</li>
+          <li class="footer-text">
+            <span>
+              <img class="social-logo" src="assets/facebook.svg" alt="">
+              <a href="https://www.facebook.com/">FaceBook</a>
+            </span>
+          </li>
+          <li class="footer-text">
+            <span>
+              <img class="social-logo" src="assets/twitter.svg" alt="">
+              <a href="https://twitter.com/?lang=en">Twitter</a>
+            </span>
+          </li>
+          <li class="news">
+            <span>
+              <img class="social-logo" src="assets/instagram.svg" alt="">
+              <a href="https://www.instagram.com/">Instagram</a>
+            </span>
+          </li>
+          <li class="news">
+            <span>
+              <img class="social-logo" src="assets/youtube.svg" alt="">
+              <a href="https://www.youtube.com/">YouTube</a>
+            </span>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<router-outlet></router-outlet>

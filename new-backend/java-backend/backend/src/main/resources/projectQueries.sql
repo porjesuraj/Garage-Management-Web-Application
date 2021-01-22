@@ -1,9 +1,11 @@
 
- insert into users values("raj",1,"1234","ADMIN");
 
-  insert into users values("suraj",1,"1234","ADMIN");
- 
-  insert into admin values(2,"raj@gmail.com","raj","1234");
+
+  insert into users values("root",1,"1234","ADMIN");
+  insert into admin values(1,"root@gmail.com","root","1234");
+
+
+
 
 insert into vendor values(1,"nasik","9881","varsha@gmail.com","varsha","1234");  
  

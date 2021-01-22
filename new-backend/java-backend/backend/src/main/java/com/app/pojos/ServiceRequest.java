@@ -65,7 +65,7 @@ public class ServiceRequest {
 	//[PENDING or COMPLETE]
 	
 	@JsonProperty("status")
-	private String status = "PENDING"; 
+	private String status ; 
 	
 	@JsonProperty("labour_charges")
 	private double labourCharges = 0.0; 

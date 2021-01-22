@@ -55,6 +55,7 @@ private	ServiceRequestDao serviceRequestDao;
 		Optional<ServiceRequest> request = serviceRequestDao.findByCustomerIdAndStatus(customer_id, status);		
 		if(request.isPresent())
 		{
+			System.out.println(request.get());
 			return request.get(); 
 			
 		}else

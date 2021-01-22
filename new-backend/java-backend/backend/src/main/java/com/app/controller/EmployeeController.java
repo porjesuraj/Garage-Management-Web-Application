@@ -207,6 +207,35 @@ public class EmployeeController {
 	}
 
 	
+	// ---------------------------------------------------------------------------
+	// Get Service Request ny Customer id
+	// ---------------------------------------------------------------------------
+@GetMapping("/service/{customer_id}")
+public ResponseEntity<?> getCustomerServiceRequestById(@PathVariable int customer_id) {
+	
+	ResponseEntity<?> resp = null;
+	Map<String, Object> map = new HashMap<String, Object>();
+	
+	System.out.println("in fetch all Customer service request");
+
+	try {
+		ServiceRequest service = serviceRequestService.getByCustomerIdAndStatus(customer_id,"PENDING");
+		map.put("status", "success");
+		map.put("data", service);
+		System.out.println("get servicing");
+		System.out.println(service);
+		resp = new ResponseEntity<>(map, HttpStatus.OK);
+	} catch (Exception e) {
+		System.err.println("Exception : " + e.getMessage());
+		map.put("status", "error");
+		map.put("error", "Customers Not Found");
+		resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+       return resp; 
+	
+}
+	
 	//------------------------------------------------------------------------
 			// Add Service Request
 			//------------------------------------------------------------------
@@ -330,15 +359,14 @@ public class EmployeeController {
 			}
 			
 			// ---------------------------------------------------------------------------
-						// List of all Customer by employee id
-						// ---------------------------------------------------------------------------
-						@GetMapping("/Customerlist/{employee_id}")
-						public ResponseEntity<?> fetchAllCustomers(@PathVariable int employee_id) {
+			// List of all Customer by employee id
+			// ---------------------------------------------------------------------------
+			@GetMapping("/Customerlist/{employee_id}")
+			public ResponseEntity<?> fetchAllCustomers(@PathVariable int employee_id) {
+				ResponseEntity<?> resp = null;
+				Map<String, Object> map = new HashMap<String, Object>();
 							
-							ResponseEntity<?> resp = null;
-							Map<String, Object> map = new HashMap<String, Object>();
-							
-							System.out.println("in fetch all Customer");
+				System.out.println("in fetch all Customer");
 
 							try {
 								List<Customer> customers = customerDao.findAllByEmployeeId(employee_id);
@@ -559,6 +587,40 @@ public class EmployeeController {
 		
 		
 	}	
+	
+	//------------------------------------------------------------------------------------------------
+	// Get stock details by id
+	//--------------------------------------------------------------------------------------------------
+		@GetMapping("/stockDetails/{stock_id}")
+		public ResponseEntity<?> getStockDetails(@PathVariable int stock_id) 		
+		{
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();	
+			System.out.println("in vendor count");	
+			try {	
+				Optional<Stock> stocks = stockDao.findById(stock_id);
+				
+				if(stocks.isPresent())
+				{
+					map.put("status", "success");
+					map.put("data", stocks.get());
+					resp = new ResponseEntity<>(map, HttpStatus.OK);	
+				}else
+				{
+					
+				}
+
+								
+			} catch (Exception e) {
+				System.err.println("Exception : " + e.getMessage());
+				map.put("status", "error");
+				map.put("error", e.getMessage());
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}	
+			return resp;
+			
+			
+		}	
 	
 	
 //------------------------------------------------------------------

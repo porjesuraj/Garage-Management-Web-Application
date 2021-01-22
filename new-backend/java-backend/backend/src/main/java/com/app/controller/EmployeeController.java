@@ -396,31 +396,41 @@ public class EmployeeController {
 		
 		
 		@PutMapping("/editCustomer/{id}")
-		public ResponseEntity<?> updateCustomer(@PathVariable(value = "id") int employee_id,
-				@Valid @RequestBody Customer customerDetails) throws Exception {
-		
-			ResponseEntity<?> resp = null;
-			Map<String, Object> map = new HashMap<String, Object>();
-			
-			customerDetails.setId(employee_id);
-			
+		public ResponseEntity<?> updateCustomer(@PathVariable(value = "id") int customer_id,
+		@Valid @RequestBody Customer customerDetails) throws Exception {
 
-			if(customerDao.save(customerDetails) != null)
-			{
-				map.put("status", "success");
-				resp = new ResponseEntity<>(map, HttpStatus.OK);
-			}else
-			{
-				map.put("status", "error");
-				map.put("error", "Student Not Found");
-				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-				
-			}
-			
-			return resp;
+		ResponseEntity<?> resp = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+
+
+		Customer customer = null; 
+		customer = customerDao.findById(customer_id)
+		.orElseThrow(() -> new Exception("Customer not found for this id :: " + customer_id));
+
+		if(customer != null)
+		{
+		//customer.setEmail(employeeDetails.getEmail());
+		//customer.setPassword(employeeDetails.getPassword());
+		customer.setName(customerDetails.getName());
+		customer.setBirthDate(customerDetails.getBirthDate());
+		customer.setAddress(customerDetails.getAddress());
+		customer.setContact(customerDetails.getContact());
+
+		final Customer updatedCustomer = customerDao.save(customer);
+		map.put("status", "success");
+		resp = new ResponseEntity<>(map, HttpStatus.OK);
+		}else
+		{
+		map.put("status", "error");
+		map.put("error", "customer Not Found");
+		resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		
+
+		return resp; 
+
+
+
+		} 
 
 		// --------------------------------------------------------------------------------------------------------------
 		

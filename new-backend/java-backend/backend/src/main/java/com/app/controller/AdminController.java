@@ -29,6 +29,7 @@ import com.app.dao.FeedbackDao;
 import com.app.dao.OfferDao;
 import com.app.dao.VendorDao;
 import com.app.pojos.Admin;
+import com.app.pojos.Feedback;
 import com.app.pojos.Offer;
 import com.app.pojos.User;
 import com.app.pojos.Vendor;
@@ -347,6 +348,60 @@ public class AdminController {
 	}
 	return resp;
 	}
+	
+	// *************************Feedback-Management****************************************************************
+		// ---------------------------------------------------------------------------------------------------------------
+		// ---------------------------------------------------------------------------
+		// List of all Feedback
+		// ---------------------------------------------------------------------------
+		@GetMapping("/Feedbacklist")
+		public ResponseEntity<?> fetchAllFeedbacks() {
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+			System.out.println("in fetch all Feedback");
+	         
+			try {
+				List<Feedback> feedbacks = feedbackDao.findAll();
+				map.put("status", "success");
+				map.put("data", feedbacks);
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			} catch (Exception e) {
+				System.err.println("Exception : " + e.getMessage());
+				map.put("status", "error");
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+		
+			
+			return resp;
+		}
+		// ---------------------------------------------------------------------------
+		// Delete Feedback
+		// ---------------------------------------------------------------------------
+
+		@DeleteMapping("/deleteFeedback/{id}")
+		public ResponseEntity<?> deleteFeedback(@PathVariable(value = "id") int id) throws Exception {
+			
+			ResponseEntity<?> resp = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			Feedback feedback = feedbackDao.findById(id)
+					.orElseThrow(() -> new Exception("Feedback not found for this id :: " + id));
+
+			try {
+				feedbackDao.delete(feedback);
+				map.put("status", "success");
+				resp = new ResponseEntity<>(map, HttpStatus.OK);
+			} catch (Exception e) {
+				System.err.println("Exception : " + e.getMessage());
+				map.put("status", "error");
+				resp = new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+			
+			return resp;
+		}
+		
 
 	// ---------------------------------------------------------------------------
 	// List of all Offers

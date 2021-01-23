@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMS</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .logo {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 40px;
+            /* text-align: center; */
+            color: red;
+            text-shadow: 1px 3px 3px #99FF33;
+            transition: 500ms;
+        }
+
+        h2:hover {
+            transform: scale(1.1);
+        }
+
+        .name {
+            font-weight: bolder;
+        }
+
+        div {
+            margin: 10px;
+        }
+
+        .credentials {
+            margin-left: 300px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo">
+            <img src="http://localhost:3000/logo.jpg" alt="">
+        </div>
+
+        <h2>Greeting from FASTWheels</h2>
+
+        <p>
+        <div>Hello <span class="name">{firstName},</span></div>
+        </p>
+
+        <div>
+            <p> As the newest member of our ever-growing worldwide tribe, you can finally have all the products and
+                services at one destination.</p>
+            <p> That’s the power of FASTWheels. </p>
+            <p> Welcome to the club <span> {Name} </span> </p>
+        </div>
+
+        <div class="credentials">
+            <div> <u>Your Login Details: </u></div>
+            <div> Email: <strong> {email} </strong> </div>
+            <div> Password: <strong> {password} </strong> </div>
+        </div>
+
+        <div style="margin-top: 50px;">Thank you for choosing FASTWheels!</div>
+        <div style="margin-top: -10px;"><strong>The FASTWheels Team</strong></div>
+
+    </div>
+
+</body>
+
+</html>

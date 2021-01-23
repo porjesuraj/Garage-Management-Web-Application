@@ -9,13 +9,15 @@ import { VendorService } from '../vendor.service';
 })
 export class CustomerListComponent implements OnInit {
 
+  email=sessionStorage.getItem("email")
+
   customers = [];
 
   constructor(
     private router: Router,
-    private vendorService: VendorService ) { }
+    private vendorService: VendorService) { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.loadCustomers()
   }
 
@@ -23,40 +25,41 @@ export class CustomerListComponent implements OnInit {
 
     this.vendorService.getCustomers().subscribe(response => {
 
-        if (response['status'] == 'success') {
-          this.customers = response['data']
-          console.log(this.customers)
-        } else {
-          console.log(response['error'])
-        }
+      if (response['status'] == 'success') {
+        this.customers = response['data']
+        console.log(this.customers)
+      } else {
+        console.log(response['error'])
       }
-      )
+    }
+    )
   }
 
- /*  onEdit(customer) {
-    this.router.navigate(['/vendor/customer-list'], {queryParams: {id: customer['id']}})
-  }*/
+  /*  onEdit(customer) {
+     this.router.navigate(['/vendor/customer-list'], {queryParams: {id: customer['id']}})
+   }*/
 
-/*   addEmployee() {
-    this.router.navigate(['/vendor/customer-list'])
-  } */
+  /*   addEmployee() {
+      this.router.navigate(['/vendor/customer-list'])
+    } */
 
-  onDelete(customer){
-    this.vendorService.deleteEmployee(customer['id']).subscribe(response =>{
-      if(response['status']=='success'){
+  onDelete(customer) {
+    this.vendorService.deleteEmployee(customer['id']).subscribe(response => {
+      if (response['status'] == 'success') {
         this.loadCustomers()
-      }else{
+      } else {
         console.log(response['error'])
       }
     })
-  } 
-
-  onLogout(){
-    sessionStorage.removeItem('token')
-    sessionStorage.removeItem('role')
-
-    this.router.navigate(['/auth/login'])
   }
-  
+
+  onLogout() {
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('name')
+    sessionStorage.removeItem('id')
+    sessionStorage.removeItem('email')
+    this.router.navigate(['/home'])
+  }
+
 }
 

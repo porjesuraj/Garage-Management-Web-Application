@@ -1,0 +1,67 @@
+<div class="row main-container">
+  <div class="col-md-2"></div>
+
+  <div class="col-md-8 sub-container">
+
+    <div class="row">
+
+      <div class="col-md-5 half-container HC-1">
+        <img src="assets/img-01.png" alt="">
+      </div>
+
+      <div class=" col-md-7 half-container HC-2">
+        <h2 id="signup-heading">SignUp</h2>
+
+        <div class="row profile-container">
+          <div class="col-md-1"> </div>
+
+          <div class="col-md-10">
+            <form class="row g-3">
+
+              <div class="col-md-12">
+                <label for="inputName" class="form-label">Name</label>
+                <input [(ngModel)]="name" name="name" type="text" class="form-control" id="inputName" placeholder="Elon Musk">
+              </div>
+
+              <div class="col-md-12">
+                <label for="inputEmail" class="form-label">Email</label>
+                <input [(ngModel)]="email" name="email" type="email" class="form-control" id="inputEmail" placeholder="trial@example.com">
+              </div>
+              <div class="col-md-12">
+                <label for="inputPassword" class="form-label">Password</label>
+                <input [(ngModel)]="password" name="password" type="password" class="form-control" id="inputPassword" placeholder="**********">
+              </div>
+
+              <div class="col-md-6">
+                <label for="inputContact" class="form-label">Contact</label>
+                <input [(ngModel)]="contact" name="contact" type="number" class="form-control" id="inputContact" placeholder="10231599">
+              </div>
+              <div class="col-md-6">
+                <label for="inputBirth" class="form-label">BirthDate</label>
+                <input [(ngModel)]="birth_date" name="birth_date" type="date" class="form-control" id="inputBirth">
+              </div>
+
+              <div class="col-12">
+                <label for="inputAddress" class="form-label">Address</label>
+                <textarea [(ngModel)]="address" name="address" id="inputAddress" cols="50" rows="2" placeholder="1234 Main St"></textarea>
+              </div>
+
+              <div class="col-12">
+                <button (click)="onSignup()" type="SAVE" class="btn btn-lg btn-success">SIGNUP</button>
+                <button (click)="onCancel()" type="CANCEL" class="btn btn-lg btn-warning">CANCEL</button>
+              </div>
+
+            </form>
+
+          </div>
+
+          <div class="col-md-1"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="col-md-2"></div>
+</div>

@@ -1,7 +1,6 @@
 import { AdminService } from './../admin.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -17,12 +16,11 @@ export class VendorAddComponent implements OnInit {
   address
   contact
 
-  vendor=null
+  vendor = null
 
   constructor(
-    private location:Location,
-    private router:Router,
-    private adminService:AdminService,
+    private router: Router,
+    private adminService: AdminService,
     private activatedRoute: ActivatedRoute,
 
   ) { }
@@ -32,20 +30,18 @@ export class VendorAddComponent implements OnInit {
     this.getPreFilledValues(id)
   }
 
-  onSave(){
+  onSave() {
 
- this.adminService.addVendor(this.name,this.email,this.password,this.address,this.contact).subscribe(response=>{
-      if(response['status']=='success'){
+    this.adminService.addVendor(this.name, this.email, this.password, this.address, this.contact).subscribe(response => {
+      if (response['status'] == 'success') {
         this.router.navigate(['/admin/vendor-list'])
-      }else{
+      } else {
         console.log(response['error'])
         window.alert("Vendor is already Used")
       }
     })
   }
-  onCancel(){
-    this.location.back()
-  }
+
 
   onUpdate() {
 
@@ -60,7 +56,8 @@ export class VendorAddComponent implements OnInit {
         })
     } else {
       // insert
-      this.adminService.addVendor(this.name, this.email, this.password, this.address, this.contact)
+      this.adminService
+      .addVendor(this.name, this.email, this.password, this.address, this.contact)
         .subscribe(response => {
           if (response['status'] == 'success') {
             this.router.navigate(['/admin/vendor-list'])
@@ -70,35 +67,31 @@ export class VendorAddComponent implements OnInit {
 
   }
 
-  getPreFilledValues(id:number){
- 
-    if(id>0){
+  getPreFilledValues(id: number) {
+
+    if (id > 0) {
       this.adminService.getVendorDetails(id).subscribe(response => {
         if (response['status'] == 'success') {
-         
-            this.name = response['data']['name']
-            this.email = response['data']['email']
-            this.password = response['data']['password']
-            this.address = response['data']['address']
-            this.contact = response['data']['contact']
-            
-            this.vendor = response['data']
-            console.log(id);
-            
-          }
-      
+
+          this.name = response['data']['name']
+          this.email = response['data']['email']
+          this.password = response['data']['password']
+          this.address = response['data']['address']
+          this.contact = response['data']['contact']
+
+          this.vendor = response['data']
+          console.log(id);
+
+        }
+
       })
     }
-    else {
 
-   }
   }
 
-  onLogout(){
-    sessionStorage.removeItem('token')
-    sessionStorage.removeItem('role')
-
-    this.router.navigate(['/auth/login'])
+  onCancel() {
+    this.router.navigate(['/admin/home'])
   }
+
 
 }

@@ -1,0 +1,135 @@
+/* =============================================================================================== */
+/* ============================================ Header =========================================== */
+/* =============================================================================================== */
+.header-div {
+  background-color: #141414;
+  color: white;
+  height: 125px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.logo img {
+  height: 100px;
+}
+
+.project-name {
+  color: white;
+  font-size: 35px;
+  font-weight: bolder;
+}
+
+.navbar-nav{
+  width: 100%;
+  padding-left: 120px;
+  padding-right: 120px;
+  justify-content: center;
+}
+
+.nav-item:hover{
+  /* background-color: #808080; */
+  border: solid 1px whitesmoke;
+}
+
+.nav-link {
+  font-size: larger;
+  width: 130px;
+  text-align: center;
+}
+
+/* =============================================================================================== */
+/* ============================================ Body ============================================= */
+/* =============================================================================================== */
+
+.half-main-container{
+  background: linear-gradient(to right, #000000, #434343);
+}
+
+.sub-container, .d-block{
+  height: 520px;
+}
+
+.sub-container{
+  background: linear-gradient(to right, #000000, #434343);
+}
+
+.half-main-container img{
+  width: 100%;
+  height: 100%;
+}
+
+.HC-1, .HC-2{
+  padding: 50px;
+}
+
+.half-container-heading{
+  font-weight: 600;
+  color: red;
+  text-align: center;
+}
+
+.content p, .quarter-container p{
+  color: white;
+  margin: 15px;
+  font-size: 20px;
+  margin-top: 30px;
+  text-transform: uppercase;
+}
+
+hr{
+  color: white;
+}
+
+.quarter-container{
+  display: inline-block;
+  width: 40%;
+  justify-content: center;
+  margin: 20px;
+}
+
+/* =============================================================================================== */
+/* =========================================== Footer ============================================ */
+/* =============================================================================================== */
+
+.footer{
+  background-color: #141414;
+  position: relative;
+  margin: auto;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+
+.footer ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer ul li {
+  margin-top: 10px;
+}
+
+.footer ul li a, .footer-text{
+  color: #808080
+}
+
+.footer-text:hover{
+  color: white;
+}
+
+.social-logo {
+  width: 20px;
+  margin-right: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.copyright {
+  margin-top: 15px;
+}
+
+.news{
+  margin: 0%;
+}

@@ -15,7 +15,7 @@ export class EmployeeAddComponent implements OnInit {
   email=''
   password=''
   birth_date
-  vendor_id
+  vendor_id=sessionStorage['id']
 
   employee=null
 
@@ -71,35 +71,27 @@ export class EmployeeAddComponent implements OnInit {
   }
 
    getPreFilledValues(id:number){
- 
+
     if(id>0){
       this.vendorService.getEmployeeDetails(id).subscribe(response => {
         if (response['status'] == 'success') {
-         
+
             this.name = response['data']['name']
             this.email = response['data']['email']
             this.password = response['data']['password']
             this.birth_date = response['data']['birth_date']
             this.vendor_id = response['data']['vendor_id']
-            
+
             this.employee = response['data']
             console.log(id);
-            
+
           }
-      
+
       })
     }
     else {
 
    }
-  }
-
-
-  onLogout(){
-    sessionStorage.removeItem('token')
-    sessionStorage.removeItem('role')
-
-    this.router.navigate(['/auth/login'])
   }
 
 }

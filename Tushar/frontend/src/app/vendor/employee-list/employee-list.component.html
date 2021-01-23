@@ -19,6 +19,10 @@
 
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+              <li class="nav-item nav-li">
+                <img class="user-logo" src="assets/user.png" alt="user-logo">
+                {{ email }}
+              </li>
               <li class="nav-item">
                 <a routerLink="/vendor/home" class="nav-link">Home</a>
               </li>
@@ -49,7 +53,6 @@
 
 
 
-
 <div class="card">
     <div class="card-header">
       <button (click)="addEmployee()" class="btn btn-success btn-sm float-right">Add</button>
@@ -65,7 +68,6 @@
             <th>Password</th>
             <th>BirthDate</th>
             <th>Vendor_ID</th>
-            <th>Active</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -77,10 +79,8 @@
             <td>{{employee['password']}}</td>
             <td>{{employee['birth_date']}}</td>
             <td>{{employee['vendor_id']}}</td>
+            
             <td>
-                <button (click)="onBlock(employee)" style="margin-left: 10px;" class="btn btn-warning btn-sm">Block</button>
-                <button (click)="onUnblock(employee)" style="margin-left: 10px;" class="btn btn-danger btn-sm">Unblock</button>              </td>
-            <td>  
               <button (click)="onEdit(employee)" style="margin-left: 10px;" class="btn btn-warning btn-sm">Edit</button>
               <button (click)="onDelete(employee)" style="margin-left: 10px;" class="btn btn-danger btn-sm">Delete</button>
             </td>

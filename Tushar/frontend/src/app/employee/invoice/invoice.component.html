@@ -1,0 +1,200 @@
+<div class="row">
+  <div class="col-md-3"></div>
+
+  <div class="col-md-6">
+<div class="card">
+    <div class="card-header">
+      <h4>Generate Invoice</h4>
+    </div>
+    <div class="card-body">
+      <div class="form">
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="">Name</label>
+              <input [(ngModel)]="name" type="text" class="form-control" >
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="">Email</label>
+              <input *ngIf = "customer" [(ngModel)]="email" type="email" class="form-control" readonly>
+              <input *ngIf = "!customer" [(ngModel)]="email" type="email" class="form-control" >
+            </div>
+          </div>
+
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="">Password</label>
+            <input *ngIf = "customer" [(ngModel)]="password" type="password" class="form-control" readonly>
+            <input *ngIf = "!customer" [(ngModel)]="password" type="password" class="form-control">
+
+          </div>
+        </div>
+
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">BirthDate</label>
+          <input [(ngModel)]="birth_date" type="date" class="form-control">
+        </div>
+      </div>
+
+<!--     <div class="col-md-6">
+      <div class="form-group">
+        <label for="">Employee_Id</label>
+        <input [(ngModel)]="employee_id" type="number" class="form-control">
+      </div>
+    </div> -->
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="">Address</label>
+        <input [(ngModel)]="address" type="text" class="form-control">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="">Contact</label>
+        <input [(ngModel)]="contact" type="text" class="form-control">
+      </div>
+    </div>
+
+<!--         <div class="form-group">
+            <button (click)="onUpdate()" class="btn btn-success">{{customer ? 'Update' : 'Add'}}</button>
+          <a style="margin-left: 10px;" routerLink="/employee/customer-list" class="btn btn-danger">Cancel</a>
+
+           <button (click)="onSave()" class="btn btn-success">Save</button>
+          <button (click)="onCancel()" class="btn btn-danger ml-5">Cancel</button>
+
+        </div> -->
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+  <div class="card">
+    <div class="card-header">
+      <h4>Add Service</h4>
+    </div>
+    <div class="card-body">
+      <div class="form">
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="">Vehicle Registation No</label>
+              <input [(ngModel)]="vehicle_reg_no" type="text" class="form-control" >
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="">Vehicle Type</label>
+              <select class="form-select form-select-lg mb-5"  [(ngModel)]="vehicle_type">
+                  <option value="BIKE">Bike</option>
+                  <option value="CAR">Car</option>
+                </select>
+            </div>
+          </div>
+
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="">Vehicle Brand</label>
+            <input [(ngModel)]="vehicle_brand" type="text" class="form-control" >
+
+          </div>
+        </div>
+
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Vehicle Model</label>
+          <input [(ngModel)]="vehicle_model" type="text" class="form-control">
+        </div>
+      </div>
+
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="">Delivery Type</label>
+        <select class="form-select form-select-lg mb-5"  [(ngModel)]="delivery_type">
+          <option value="DROPBY">Drop-By</option>
+          <option value="PICKUP">PickUp</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Discount</label>
+          <input [(ngModel)]="discount" type="number" class="form-control">
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Labour Charges</label>
+          <input [(ngModel)]="labour_charges" type="number" class="form-control">
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Out Date</label>
+          <input [(ngModel)]="out_date" type="date" class="form-control">
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Product Charges</label>
+          <input [(ngModel)]="product_charges" type="number" class="form-control">
+        </div>
+      </div>
+
+<       <div class="col-md-6">
+        <div class="form-group">
+          <label for="">service_date</label>
+          <input [(ngModel)]="service_date" type="date" class="form-control">
+        </div>
+      </div>
+
+
+<!--       <div class="col-md-6">
+        <div class="form-group">
+          <label for="">status</label>
+          <input [(ngModel)]="status" type="text" class="form-control">
+        </div>
+      </div> -->
+
+<!--       <div class="col-md-6">
+        <div class="form-group">
+          <label for="">total</label>
+          <input [(ngModel)]="total" type="number" class="form-control">
+        </div>
+      </div> -->
+
+
+        <div class="form-group">
+
+
+           <button (click)="onUpdate()" class="btn btn-success">Invoice</button>
+          <button (click)="onCancel()" class="btn btn-danger ml-5">Cancel</button> 
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>

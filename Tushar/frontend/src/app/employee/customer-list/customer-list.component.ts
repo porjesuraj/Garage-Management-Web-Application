@@ -9,6 +9,8 @@ import { EmployeeService } from '../employee.service';
 })
 export class CustomerListComponent implements OnInit {
 
+  email=sessionStorage.getItem("email")
+
   customers = [];
 
   constructor(
@@ -73,11 +75,24 @@ export class CustomerListComponent implements OnInit {
   }
 
 
-  onLogout(){
-    sessionStorage.removeItem('token')
-    sessionStorage.removeItem('role')
+  addService(customer){
+    this.router.navigate(['/employee/add-service'], {queryParams: {id: customer['id']}})
+  }
 
-    this.router.navigate(['/auth/login'])
+  createInvoice(customer){
+    this.router.navigate(['/employee/invoice'], {state: {customer: customer}})
+  }
+
+  viewInvoice(customer){
+    this.router.navigate(['/employee/print-invoice'], {state: {customer: customer}})
+  }
+
+  onLogout() {
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('name')
+    sessionStorage.removeItem('id')
+    sessionStorage.removeItem('email')
+    this.router.navigate(['/home'])
   }
 }
 

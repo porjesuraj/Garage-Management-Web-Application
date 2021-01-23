@@ -6,50 +6,26 @@ import { Injectable } from '@angular/core';
 })
 export class AdminService {
 
-  
+
   url = 'http://localhost:8080/admin'
 
-  constructor(
-    
-    private httpClient: HttpClient) { }
-    
-    getVendors(){
+  httpOptions = {
+    headers: new HttpHeaders({
+      token: sessionStorage['token']
 
-     // add the token in the request header
-     const httpOptions = {
-      headers: new HttpHeaders({
-        token: sessionStorage['token']
-      })
-    };
-    
-    return this.httpClient.get(this.url+"/vendorlist", httpOptions)
+    })
+  };
+
+
+  constructor(
+
+    private httpClient: HttpClient) { }
+
+  getVendors() {
+    return this.httpClient.get(this.url + "/vendorlist", this.httpOptions)
   }
 
   updateVendor(id, name: string, email: string, password: string, address: string, contact: string) {
-
-    const httpOptions = {
-     headers: new HttpHeaders({
-       token: sessionStorage['token']
-     })
-   };
-
-   const body = {
-    name: name,
-    email: email,
-    password: password,
-    address: address,
-    contact: contact
-  }
-  return this.httpClient.put(this.url + `/editVendor/${id}`, body, httpOptions)
-  }
-
-  addVendor(name: string, email: string, password: string, address: string, contact: string) {
-    // add the token in the request header
-    const httpOptions = {
-      headers: new HttpHeaders({
-        token: sessionStorage['token']
-      })
-    };
     const body = {
       name: name,
       email: email,
@@ -57,48 +33,38 @@ export class AdminService {
       address: address,
       contact: contact
     }
-    return this.httpClient.post(this.url + "/vendor/signup" , body, httpOptions)
-    }
-    
-    getVendorDetails(id) {
-      // add the token in the request header
-      const httpOptions = {
-       headers: new HttpHeaders({
-         token: sessionStorage['token']
-       })
-     };
-     return this.httpClient.get(this.url + `/vendor/${id}`, httpOptions)
-    }
+    return this.httpClient.put(this.url + `/editVendor/${id}`, body, this.httpOptions)
+  }
 
-    deleteVendor(id){
-      const httpOptions = {
-        headers: new HttpHeaders({
-          token: sessionStorage['token']
-        })
-      };
-      return this.httpClient.delete(this.url+`/deleteVendor/${id}`,httpOptions)
+  addVendor(name: string, email: string, password: string, address: string, contact: string) {
+    const body = {
+      name: name,
+      email: email,
+      password: password,
+      address: address,
+      contact: contact
     }
+    return this.httpClient.post(this.url + "/vendor/signup", body, this.httpOptions)
+  }
 
+  getVendorDetails(id) {
+    return this.httpClient.get(this.url + `/vendor/${id}`, this.httpOptions)
+  }
 
-    blockVendor(id){
+  deleteVendor(id) {
+    return this.httpClient.delete(this.url + `/deleteVendor/${id}`, this.httpOptions)
+  }
 
-      const httpOptions = {
-        headers: new HttpHeaders({
-          token: sessionStorage['token']
-        })
-      };
-      
-      return this.httpClient.put(this.url +`/blockVendor/${id}`, httpOptions)
-    }
+  getCount(){
+    return this.httpClient.get(this.url + "/AllCount", this.httpOptions)
+  }
 
-    unblockVendor(id){
-      const httpOptions = {
-        headers: new HttpHeaders({
-          token: sessionStorage['token']
-          
-        })
-      };
-      
-            return this.httpClient.put(this.url +`/unblockVendor/${id}`, httpOptions)
-    }
+  getFeedback(){
+    return this.httpClient.get(this.url + "/Feedbacklist", this.httpOptions)
+  }
+
+  deleteFeedback(id) {
+    return this.httpClient.delete(this.url + `/deleteFeedback/${id}`, this.httpOptions)
+  }
+
 }

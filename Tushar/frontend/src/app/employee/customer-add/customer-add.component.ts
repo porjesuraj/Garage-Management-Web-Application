@@ -15,8 +15,8 @@ export class CustomerAddComponent implements OnInit {
   email=''
   password=''
   birth_date
-  employee_id
-  contact
+  employee_id=sessionStorage['id']
+  contact=''
   address
 
   customer=null
@@ -31,6 +31,7 @@ export class CustomerAddComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.queryParams['id']
+    console.log(id)
     this.getPreFilledValues(id)
   }
 
@@ -51,8 +52,10 @@ export class CustomerAddComponent implements OnInit {
 
   onUpdate() {
 
+    
     if (this.customer) {
       // edit
+      console.log('in update')
       this.employeeService
         .updateCustomer(this.customer['id'], this.name, this.email, this.password, this.birth_date, this.employee_id,this.address,this.contact)
         .subscribe(response => {
@@ -62,6 +65,7 @@ export class CustomerAddComponent implements OnInit {
         })
     } else {
       // insert
+      console.log('in add')
       this.employeeService.addCustomer(this.name, this.email, this.password, this.birth_date, this.employee_id,this.address,this.contact)
         .subscribe(response => {
           if (response['status'] == 'success') {
@@ -73,25 +77,25 @@ export class CustomerAddComponent implements OnInit {
   }
 
    getPreFilledValues(id:number){
- 
+
+    console.log("on load")
     if(id>0){
       this.employeeService.getCustomerDetails(id).subscribe(response => {
         if (response['status'] == 'success') {
-         
+
             this.name = response['data']['name']
             this.email = response['data']['email']
             this.password = response['data']['password']
             this.birth_date = response['data']['birth_date']
-            this.employee_id = response['data']['employee_id']
             this.address = response['data']['address']
-.            this.contact = response['data']['contact']
-
-            
+            this.contact = response['data']['contact']
             this.customer = response['data']
-            console.log(id);
+            console.log(this.customer);
             
+            console.log("on load" + this.customer);
+
           }
-      
+
       })
     }
     else {
@@ -100,11 +104,6 @@ export class CustomerAddComponent implements OnInit {
   }
 
 
-  onLogout(){
-    sessionStorage.removeItem('token')
-    sessionStorage.removeItem('role')
 
-    this.router.navigate(['/auth/login'])
-  }
 
 }

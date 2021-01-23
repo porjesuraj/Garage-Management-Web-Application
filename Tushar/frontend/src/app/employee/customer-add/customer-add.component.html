@@ -1,11 +1,16 @@
-<p>employee-add works!</p>
+
+
+<div class="row">
+  <div class="col-md-3"></div>
+
+  <div class="col-md-6">
 <div class="card">
     <div class="card-header">
-      <h4>{{customer ? 'Update' : 'Add'}} Employee</h4>
+      <h4>{{customer ? 'Update' : 'Add'}} Customer</h4>
     </div>
     <div class="card-body">
       <div class="form">
-  
+
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
@@ -13,7 +18,7 @@
               <input [(ngModel)]="name" type="text" class="form-control" >
             </div>
           </div>
-  
+
           <div class="col-md-6">
             <div class="form-group">
               <label for="">Email</label>
@@ -21,8 +26,8 @@
               <input *ngIf = "!customer" [(ngModel)]="email" type="email" class="form-control" >
             </div>
           </div>
-  
-        
+
+
         <div class="col-md-6">
           <div class="form-group">
             <label for="">Password</label>
@@ -32,20 +37,20 @@
           </div>
         </div>
 
-  
+
       <div class="col-md-6">
         <div class="form-group">
           <label for="">BirthDate</label>
           <input [(ngModel)]="birth_date" type="date" class="form-control">
         </div>
       </div>
-  
-    <div class="col-md-6">
+
+<!--     <div class="col-md-6">
       <div class="form-group">
         <label for="">Employee_Id</label>
         <input [(ngModel)]="employee_id" type="number" class="form-control">
       </div>
-    </div>
+    </div> -->
 
     <div class="col-md-6">
       <div class="form-group">
@@ -60,17 +65,15 @@
         <input [(ngModel)]="contact" type="text" class="form-control">
       </div>
     </div>
-  
+
         <div class="form-group">
            <button (click)="onUpdate()" class="btn btn-success">{{customer ? 'Update' : 'Add'}}</button>
-          <a style="margin-left: 10px;" routerLink="/product-list" class="btn btn-danger">Cancel</a> 
-            
-<!--           <button (click)="onSave()" class="btn btn-success">Save</button>
-          <button (click)="onCancel()" class="btn btn-danger ml-5">Cancel</button>  -->
-     
+          <a style="margin-left: 10px;" routerLink="/employee/customer-list" class="btn btn-danger">Cancel</a>
+
+
         </div>
-  
-  
+
+
       </div>
     </div>
   </div>

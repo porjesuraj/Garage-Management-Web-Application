@@ -1,15 +1,23 @@
+
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthService } from './auth/auth.service';
 
 const routes: Routes = [
- // {path: '', redirectTo : '/home', pathMatch : 'full'},
-  {path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)},
-  {path: 'vendor', loadChildren: () => import('./vendor/vendor.module').then(m => m.VendorModule)},
-  {path: 'employee', loadChildren: () => import('./employee/employee.module').then(m=> m.EmployeeModule)},
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
 
-{path : 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
+  { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule) },
+
+  { path: 'admin', canActivate: [AuthService], loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+
+  { path: 'vendor', canActivate: [AuthService], loadChildren: () => import('./vendor/vendor.module').then(m => m.VendorModule) },
+
+  { path: 'employee', canActivate: [AuthService], loadChildren: () => import('./employee/employee.module').then(m => m.EmployeeModule) },
+
+  { path: 'customer', canActivate: [AuthService], loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule) },
 
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

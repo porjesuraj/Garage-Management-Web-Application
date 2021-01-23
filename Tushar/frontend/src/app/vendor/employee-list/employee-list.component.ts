@@ -9,13 +9,15 @@ import { VendorService } from '../vendor.service';
 })
 export class EmployeeListComponent implements OnInit {
 
+  email=sessionStorage.getItem("email")
+
   employees = [];
 
   constructor(
     private router: Router,
     private vendorService: VendorService ) { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.loadEmployees()
   }
 
@@ -52,7 +54,7 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onBlock(employee){
-    
+
     this.vendorService.blockEmployee(employee['id']).subscribe(response =>{
       if(response['status']=='success'){
         this.loadEmployees()
@@ -73,11 +75,12 @@ export class EmployeeListComponent implements OnInit {
   }
 
 
-  onLogout(){
+  onLogout() {
     sessionStorage.removeItem('token')
-    sessionStorage.removeItem('role')
-
-    this.router.navigate(['/auth/login'])
+    sessionStorage.removeItem('name')
+    sessionStorage.removeItem('id')
+    sessionStorage.removeItem('email')
+    this.router.navigate(['/home'])
   }
 }
 

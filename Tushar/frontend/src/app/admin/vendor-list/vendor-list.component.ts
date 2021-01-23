@@ -9,13 +9,15 @@ import { Router } from '@angular/router';
 })
 export class VendorListComponent implements OnInit {
 
+  email=sessionStorage.getItem("email")
+
   vendors = [];
 
   constructor(
     private router: Router,
-    private adminService: AdminService ) { }
+    private adminService: AdminService) { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.loadVendors()
   }
 
@@ -23,60 +25,40 @@ export class VendorListComponent implements OnInit {
 
     this.adminService.getVendors().subscribe(response => {
 
-        if (response['status'] == 'success') {
-          this.vendors = response['data']
-          console.log(this.vendors)
-        } else {
-          console.log(response['error'])
-        }
+      if (response['status'] == 'success') {
+        this.vendors = response['data']
+        console.log(this.vendors)
+      } else {
+        console.log(response['error'])
       }
-      )
+    }
+    )
   }
 
   onEdit(vendor) {
-    this.router.navigate(['/admin/vendor-add'], {queryParams: {id: vendor['id']}})
+    this.router.navigate(['/admin/vendor-add'], { queryParams: { id: vendor['id'] } })
   }
 
   addVendor() {
     this.router.navigate(['/admin/vendor-add'])
   }
 
-  onDelete(vendor){
-    this.adminService.deleteVendor(vendor['id']).subscribe(response =>{
-      if(response['status']=='success'){
+  onDelete(vendor) {
+    this.adminService.deleteVendor(vendor['id']).subscribe(response => {
+      if (response['status'] == 'success') {
         this.loadVendors()
-      }else{
+      } else {
         console.log(response['error'])
       }
     })
   }
 
-  onBlock(vendor){
-    
-    this.adminService.blockVendor(vendor['id']).subscribe(response =>{
-      if(response['status']=='success'){
-        this.loadVendors()
-      }else{
-        console.log(response['error'])
-      }
-    })
-  }
-
-  onUnblock(vendor){
-    this.adminService.unblockVendor(vendor['id']).subscribe(response =>{
-      if(response['status']=='success'){
-        this.loadVendors()
-      }else{
-        console.log(response['error'])
-      }
-    })
-  }
-
-  onLogout(){
+  onLogout() {
     sessionStorage.removeItem('token')
-    sessionStorage.removeItem('role')
-
-    this.router.navigate(['/auth/login'])
+    sessionStorage.removeItem('name')
+    sessionStorage.removeItem('id')
+    sessionStorage.removeItem('email')
+    this.router.navigate(['/home'])
   }
 }
 
